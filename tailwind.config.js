@@ -21,6 +21,16 @@ module.exports = {
         'script': ['Playfair Display', 'serif'], // Vous pouvez changer pour une vraie font script si souhaité
         'sans': ['system-ui', 'sans-serif'],
       },
+      keyframes: {
+        wave: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '25%': { transform: 'rotate(-4deg)' },
+          '75%': { transform: 'rotate(4deg)' }
+        }
+      },
+      animation: {
+        wave: 'wave 0.5s ease-in-out'
+      }
     },
   },
   plugins: [],

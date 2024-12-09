@@ -33,6 +33,39 @@ const PROJECTS = [
       "/images/projet2/lesJO_2024.jpeg",
     ],
     details: "A creative approach for the Paris 2024 Olympic Games, highlighting the sporting spirit and elegance of the French capital. The project combines modern and traditional elements to create a unique visual identity that celebrates this global event."
+  },
+  {
+    id: 3,
+    title: "Coming Soon",
+    description: "Innovative Transportation Design Project",
+    category: "Concept Design",
+    thumbnail: "/images/placeholder/coming-soon-1.jpg",
+    images: [
+      "/images/placeholder/coming-soon-1.jpg",
+    ],
+    details: "An exciting new transportation design project that pushes the boundaries of sustainable mobility. Stay tuned for the full reveal of this innovative concept."
+  },
+  {
+    id: 4,
+    title: "Coming Soon",
+    description: "Future Mobility Concept",
+    category: "Vehicle Design",
+    thumbnail: "/images/placeholder/coming-soon-2.jpg",
+    images: [
+      "/images/placeholder/coming-soon-2.jpg",
+    ],
+    details: "A forward-thinking mobility solution that reimagines urban transportation. This project explores new possibilities in sustainable and efficient vehicle design."
+  },
+  {
+    id: 5,
+    title: "Coming Soon",
+    description: "Urban Mobility Solution",
+    category: "Transportation Design",
+    thumbnail: "/images/placeholder/coming-soon-3.jpg",
+    images: [
+      "/images/placeholder/coming-soon-3.jpg",
+    ],
+    details: "An upcoming project focused on solving urban mobility challenges through innovative design thinking and sustainable solutions. More details will be revealed soon."
   }
 ]
 
@@ -137,10 +170,10 @@ export default function Home() {
                   />
                 </div>
                 <div className="space-y-4">
-                  <h1 className="name-text block text-gray-900 text-5xl font-serif tracking-wide opacity-0">
+                  <h1 className="name-text block text-gray-900 text-6xl font-serif tracking-wide opacity-0">
                     Camille Grand
                   </h1>
-                  <p className="subtitle-text text-gray-600 text-xl font-serif opacity-0">
+                  <p className="subtitle-text text-gray-600 text-xl opacity-0 tracking-widest uppercase">
                     Transportation Designer
                   </p>
                 </div>
@@ -244,21 +277,25 @@ export default function Home() {
           <FadeInSection>
             <div className="max-w-6xl mx-auto text-center">
               <h2 className="text-4xl font-serif mb-6">Contact</h2>
-              <p className="text-xl text-gray-600 mb-16">Let's keep in touch</p>
+              <p 
+                className="text-xl text-gray-600 mb-16 tracking-wide inline-block hover:animate-wave cursor-default"
+              >
+                let's keep in touch
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-[1fr,2fr] gap-16">
                 {/* Colonne de gauche - CV Downloads et Social Links */}
                 <div className="space-y-16">
                   {/* CV Download Section */}
                   <div className="space-y-4">
-                    <h3 className="text-xl font-serif text-gray-800 mb-8">Download Resume</h3>
+                    <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Download Resume</h3>
                     <div className="flex flex-col gap-4">
                       <a 
                         href="/cv/CV_CamilleGrand_FR.pdf" 
                         target="_blank"
                         className="group relative inline-flex items-center justify-center w-full px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
                       >
-                        <span className="font-serif text-lg text-gray-900">CV Français</span>
+                        <span className="tracking-wide text-lg text-gray-900">CV Français</span>
                         <i className="bi bi-download absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                       </a>
                       <a 
@@ -266,7 +303,7 @@ export default function Home() {
                         target="_blank"
                         className="group relative inline-flex items-center justify-center w-full px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
                       >
-                        <span className="font-serif text-lg text-gray-900">CV English</span>
+                        <span className="tracking-wide text-lg text-gray-900">CV English</span>
                         <i className="bi bi-download absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                       </a>
                     </div>
@@ -274,7 +311,7 @@ export default function Home() {
 
                   {/* Social Links */}
                   <div className="space-y-6">
-                    <h3 className="text-xl font-serif text-gray-800 mb-8">Social Links</h3>
+                    <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Social Links</h3>
                     <div className="flex flex-col gap-6">
                       <a 
                         href="mailto:camille.grand44@gmail.com" 
@@ -313,7 +350,7 @@ export default function Home() {
 
                 {/* Colonne de droite - Formulaire de contact */}
                 <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-                  <h3 className="text-xl font-serif text-gray-800 mb-8 text-left">Send a Message</h3>
+                  <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8 text-left">Send a Message</h3>
                   <ContactForm />
                 </div>
               </div>

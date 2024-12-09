@@ -89,13 +89,22 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
 
             {/* Image principale avec ombre subtile */}
             <div className="relative w-full aspect-[21/9] mb-20 rounded-xl overflow-hidden shadow-lg">
-              <Image
-                src={project.thumbnail}
-                alt={project.title}
-                fill
-                className="object-cover"
-                priority
-              />
+              {project.thumbnail ? (
+                <Image
+                  src={project.thumbnail}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    target.parentElement!.style.backgroundColor = '#f3f4f6' // bg-gray-100
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100" />
+              )}
             </div>
 
             {/* Détails du projet avec style amélioré */}
@@ -109,12 +118,21 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 <div className="grid grid-cols-2 gap-8 self-start">
                   {project.images.slice(1).map((img, index) => (
                     <div key={index} className="relative aspect-square rounded-lg overflow-hidden shadow-md">
-                      <Image
-                        src={img}
-                        alt={`${project.title} - image ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
+                      {img ? (
+                        <Image
+                          src={img}
+                          alt={`${project.title} - image ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.style.display = 'none'
+                            target.parentElement!.style.backgroundColor = '#f3f4f6'
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100" />
+                      )}
                     </div>
                   ))}
                 </div>

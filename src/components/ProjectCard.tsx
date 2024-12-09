@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import ProjectModal from './ProjectModal'
+import PlaceholderImage from './PlaceholderImage'
 
 interface ProjectCardProps {
   title: string
@@ -22,6 +23,7 @@ export default function ProjectCard({
   details
 }: ProjectCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [imageError, setImageError] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,6 +48,10 @@ export default function ProjectCard({
     cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
   }, [])
 
+  const handleImageError = () => {
+    setImageError(true)
+  }
+
   return (
     <>
       <div 
@@ -57,14 +63,19 @@ export default function ProjectCard({
       >
         <div className="group h-full bg-white hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-xl rounded-lg border border-gray-100">
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-lg">
-            <Image
-              src={thumbnail}
-              alt={title}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              priority
-            />
+            {thumbnail.includes('coming-soon') || imageError ? (
+              <PlaceholderImage />
+            ) : (
+              <Image
+                src={thumbnail}
+                alt={title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                priority
+                onError={handleImageError}
+              />
+            )}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
           </div>
           <div className="p-6 space-y-2">
@@ -77,7 +88,11 @@ export default function ProjectCard({
       <ProjectModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        project={{ title, description, category, thumbnail, images, details }}
+        project={{ 
+          ...{ title, description, category, details },
+          thumbnail: imageError ? '' : thumbnail,
+          images: images.map(img => imageError ? '' : img)
+        }}
       />
     </>
   )
