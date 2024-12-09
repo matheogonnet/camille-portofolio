@@ -9,6 +9,13 @@ interface FadeInSectionProps {
   direction?: 'up' | 'down' | 'left' | 'right'
 }
 
+// Définition du type pour l'animation
+interface AnimeInstance {
+  animatables: {
+    target: HTMLElement
+  }[]
+}
+
 export default function FadeInSection({ 
   children, 
   delay = 0,
@@ -38,7 +45,7 @@ export default function FadeInSection({
               duration: 800,
               delay,
               easing: 'easeOutQuart',
-              begin: function(anim) {
+              begin: function(anim: AnimeInstance) {
                 const target = anim.animatables[0].target as HTMLElement
                 target.style.visibility = 'visible'
               }
