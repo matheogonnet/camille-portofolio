@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 17, 24, 39;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 250, 250, 250;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Animations douces pour les transitions */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Style minimaliste pour les conteneurs */
+.container {
+  @apply max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Style épuré pour les titres */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-light tracking-tight;
+}
+
+/* Style minimal pour les boutons */
+.btn {
+  @apply px-4 py-2 rounded-md transition-all;
+  @apply hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+/* Animation subtile au survol des éléments interactifs */
+.hover-effect {
+  @apply transform transition-transform duration-200;
+  @apply hover:scale-105;
+}
+
+/* Style pour les liens */
+a {
+  @apply text-blue-600 hover:text-blue-700 transition-colors;
+  @apply no-underline;
+}
+
+/* Scrollbar personnalisée et minimaliste */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--background-end-rgb));
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+/* Loading animation */
+.loading-spinner {
+  @apply w-8 h-8 border-4 border-blue-600 rounded-full;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
