@@ -14,28 +14,6 @@ import ContactForm from '@/components/ContactForm'
 const PROJECTS = [
   {
     id: 1,
-    title: "Silmo",
-    description: "Design project for the International Optical Fair",
-    category: "Graphic Design",
-    thumbnail: "/images/projet1/silmo.jpeg",
-    images: [
-      "/images/projet1/silmo.jpeg",
-    ],
-    details: "This project was created for Silmo, the International Optical Fair. It showcases a modern and refined design approach, reflecting the innovation and elegance of the optical industry."
-  },
-  {
-    id: 2,
-    title: "Paris Olympics 2024",
-    description: "Design and visual identity for the Paris Olympic Games",
-    category: "Design & Branding",
-    thumbnail: "/images/projet2/lesJO_2024.jpeg",
-    images: [
-      "/images/projet2/lesJO_2024.jpeg",
-    ],
-    details: "A creative approach for the Paris 2024 Olympic Games, highlighting the sporting spirit and elegance of the French capital. The project combines modern and traditional elements to create a unique visual identity that celebrates this global event."
-  },
-  {
-    id: 3,
     title: "Coming Soon",
     description: "Innovative Transportation Design Project",
     category: "Concept Design",
@@ -44,28 +22,6 @@ const PROJECTS = [
       "/images/placeholder/coming-soon-1.jpg",
     ],
     details: "An exciting new transportation design project that pushes the boundaries of sustainable mobility. Stay tuned for the full reveal of this innovative concept."
-  },
-  {
-    id: 4,
-    title: "Coming Soon",
-    description: "Future Mobility Concept",
-    category: "Vehicle Design",
-    thumbnail: "/images/placeholder/coming-soon-2.jpg",
-    images: [
-      "/images/placeholder/coming-soon-2.jpg",
-    ],
-    details: "A forward-thinking mobility solution that reimagines urban transportation. This project explores new possibilities in sustainable and efficient vehicle design."
-  },
-  {
-    id: 5,
-    title: "Coming Soon",
-    description: "Urban Mobility Solution",
-    category: "Transportation Design",
-    thumbnail: "/images/placeholder/coming-soon-3.jpg",
-    images: [
-      "/images/placeholder/coming-soon-3.jpg",
-    ],
-    details: "An upcoming project focused on solving urban mobility challenges through innovative design thinking and sustainable solutions. More details will be revealed soon."
   }
 ]
 
@@ -314,15 +270,6 @@ export default function Home() {
                     <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Social Links</h3>
                     <div className="flex flex-col gap-6">
                       <a 
-                        href="mailto:camille.grand44@gmail.com" 
-                        className="inline-flex items-center gap-2 text-lg justify-center group text-gray-900 hover:text-gray-600"
-                      >
-                        <i className="bi bi-envelope"></i>
-                        <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
-                          camille.grand44@gmail.com
-                        </span>
-                      </a>
-                      <a 
                         href="https://www.linkedin.com/in/camille-grand-a82aa5201/" 
                         target="_blank" 
                         rel="noopener noreferrer"
@@ -342,6 +289,15 @@ export default function Home() {
                         <i className="bi bi-instagram"></i>
                         <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
                           camillegrand.design
+                        </span>
+                      </a>
+                      <a 
+                        href="mailto:camille.grand44@gmail.com" 
+                        className="inline-flex items-center gap-2 text-lg justify-center group text-gray-900 hover:text-gray-600"
+                      >
+                        <i className="bi bi-envelope"></i>
+                        <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
+                          camille.grand44@gmail.com
                         </span>
                       </a>
                     </div>
