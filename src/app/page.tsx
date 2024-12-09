@@ -111,7 +111,7 @@ export default function Home() {
   }, [])
 
   return (
-    <>
+    <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <Navbar />
       <main className="min-h-screen">
         {/* Hero Section */}
@@ -321,6 +321,6 @@ export default function Home() {
           </FadeInSection>
         </section>
       </main>
-    </>
+    </div>
   )
 } 
