@@ -38,7 +38,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Style minimal pour les boutons */
 .btn {
   @apply px-4 py-2 rounded-md transition-all;
-  @apply hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  @apply hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2;
 }
 
 /* Animation subtile au survol des éléments interactifs */
@@ -49,7 +49,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Style pour les liens */
 a {
-  @apply text-blue-600 hover:text-blue-700 transition-colors;
+  @apply text-gray-900 hover:text-gray-600 transition-colors;
   @apply no-underline;
 }
 
@@ -73,7 +73,7 @@ a {
 
 /* Loading animation */
 .loading-spinner {
-  @apply w-8 h-8 border-4 border-blue-600 rounded-full;
+  @apply w-8 h-8 border-4 border-gray-900 rounded-full;
   border-top-color: transparent;
   animation: spin 1s linear infinite;
 }
@@ -82,4 +82,160 @@ a {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Animation pour les cartes projets */
+@keyframes cardHover {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+
+.project-card-hover {
+  transition: transform 0.3s ease-out;
+}
+
+.project-card-hover:hover {
+  animation: cardHover 0.3s ease-out forwards;
+}
+
+/* Style pour la modal */
+.modal-overlay {
+  backdrop-filter: blur(5px);
+}
+
+/* Scrollbar personnalisée pour la modal */
+.expanded-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.expanded-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.expanded-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+/* Styles pour la navigation */
+.nav-link {
+  @apply text-gray-600 hover:text-gray-900 transition-colors duration-200;
+  @apply text-sm font-medium;
+}
+
+/* Styles pour les liens de contact */
+.contact-link {
+  @apply text-gray-900 hover:text-gray-600 transition-colors duration-200;
+}
+
+/* Animation de défilement douce */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  .scroll-arrow {
+    animation: none;
+  }
+}
+
+/* Styles pour les animations de scroll */
+.fade-in-section {
+  will-change: transform, opacity;
+}
+
+/* Optimisation des performances */
+.smooth-scroll {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Animation de la flèche de défilement */
+.scroll-arrow {
+  will-change: transform, opacity;
+}
+
+.scroll-arrow:hover {
+  animation-play-state: paused;
+}
+
+/* Styles pour les cartes About */
+.about-card-hover {
+  transition: all 0.3s ease-out;
+}
+
+.about-card-hover:hover {
+  transform: translateY(-5px);
+}
+
+/* Animation d'entrée pour les icônes */
+@keyframes iconFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.bi {
+  display: inline-block;
+}
+
+.about-card:hover .bi {
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+/* Effet parallaxe */
+.parallax-container {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Animation du logo */
+.logo-container {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Effet de brillance */
+.logo-shine {
+  pointer-events: none;
+  transform: rotate(45deg);
+  filter: blur(10px);
+}
+
+/* Optimisations de performance */
+.optimize-gpu {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
 }

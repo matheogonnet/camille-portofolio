@@ -16,6 +16,7 @@
     "clsx": "latest",
     "daisyui": "latest",
     "next": "latest",
+    "nodemailer": "^6.9.16",
     "react": "latest",
     "react-dom": "latest",
     "tailwind-merge": "latest",

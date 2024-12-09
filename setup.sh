@@ -68,6 +68,39 @@ print_step "Configuration des permissions..."
 chmod +x node_modules/.bin/*
 print_success "Permissions configurées"
 
+# Création des dossiers
+mkdir -p public/images/projet1
+mkdir -p public/images/projet2
+mkdir -p public/images/projet3
+mkdir -p public/images/logo
+mkdir -p public/cv
+
+# Tableau des fichiers à vérifier
+REQUIRED_FILES=(
+    "public/images/projet1/silmo.jpeg"
+    "public/images/projet2/lesJO_2024.jpeg"
+    "public/images/logo/cg_logo.png"
+    "public/images/fr-flag.svg"
+    "public/images/en-flag.svg"
+    "public/cv/CV_CamilleGrand_FR.pdf"
+    "public/cv/CV_CamilleGrand_EN.pdf"
+)
+
+# Vérification des fichiers
+print_step "Vérification des fichiers..."
+
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        echo -e "${RED}⚠️  Attention : Le fichier ${file#public/} n'est pas présent${NC}"
+        echo -e "${BLUE}➡️  Veuillez placer le fichier à cet emplacement${NC}"
+    else
+        echo -e "${GREEN}✅ Fichier ${file#public/} trouvé${NC}"
+    fi
+done
+
+# Permissions
+chmod 755 public/images -R
+
 # Message final
 echo -e "\n${GREEN}=== Installation terminée avec succès ===${NC}"
 echo -e "Vous pouvez maintenant lancer le projet avec ${BLUE}npm run dev${NC}" 
