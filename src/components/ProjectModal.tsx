@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
-import { createPortal } from 'react-dom'
+import { Dialog } from '@headlessui/react'
 import Image from 'next/image'
-import anime from 'animejs'
+import { cn } from '@/lib/utils'
+import PlaceholderImage from './PlaceholderImage'
+import ImageZoom from './ImageZoom'
+import { useState } from 'react'
 
 interface ProjectModalProps {
   isOpen: boolean
@@ -12,150 +14,112 @@ interface ProjectModalProps {
     title: string
     description: string
     category: string
-    thumbnail: string
-    images: string[]
+    projectType: string
+    brand?: string
+    year: number
+    duration: string
+    steps: {
+      title: string
+      description: string
+      image: string
+      imagePosition: 'left' | 'right'
+    }[]
     details: string
   }
 }
 
 export default function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
-  useEffect(() => {
-    if (isOpen) {
-      // Animation d'ouverture
-      anime.timeline({
-        duration: 600,
-        easing: 'easeOutQuart'
-      })
-      .add({
-        targets: '.modal-overlay',
-        opacity: [0, 1],
-        duration: 300
-      })
-      .add({
-        targets: '.modal-content',
-        opacity: [0, 1],
-        scale: [0.98, 1],
-        translateY: [20, 0],
-      }, '-=200')
-    }
-  }, [isOpen])
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  if (!isOpen) return null
-
-  return createPortal(
-    <div className="fixed inset-0 z-50">
-      <div 
-        className="modal-overlay absolute inset-0 bg-white/80 backdrop-blur-lg opacity-0"
-        onClick={onClose}
-      />
-      <div className="absolute inset-12 md:inset-16">
-        <div 
-          className="modal-content opacity-0 expanded-content relative w-full h-full bg-white shadow-2xl overflow-y-auto rounded-2xl border border-gray-100"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Bouton de fermeture */}
-          <button 
-            onClick={onClose}
-            className="absolute top-8 right-8 z-50 group"
-            aria-label="Close"
-          >
-            <div className="relative">
-              <div className="absolute -inset-2.5 rounded-full bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-              <svg 
-                className="w-5 h-5 relative text-gray-400 group-hover:text-gray-900 transition-colors duration-300" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={1.5} 
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </button>
-
-          <div className="max-w-[1800px] mx-auto px-8 py-16 md:px-16 md:py-20">
-            {/* En-tête avec style amélioré */}
-            <div className="mb-20 max-w-3xl">
-              <span className="inline-block text-sm text-gray-500 font-medium tracking-wider uppercase mb-4 px-3 py-1 bg-gray-50 rounded-full">
-                {project.category}
-              </span>
-              <h2 className="font-serif text-5xl mt-3 mb-8">{project.title}</h2>
-              <p className="text-gray-600 leading-relaxed text-xl">{project.description}</p>
-            </div>
-
-            {/* Image principale avec ombre subtile */}
-            <div className="relative w-full aspect-[21/9] mb-20 rounded-xl overflow-hidden shadow-lg">
-              {project.thumbnail ? (
-                <Image
-                  src={project.thumbnail}
-                  alt={project.title}
-                  fill
-                  className="object-cover"
-                  priority
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.style.display = 'none'
-                    target.parentElement!.style.backgroundColor = '#f3f4f6' // bg-gray-100
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-100" />
-              )}
-            </div>
-
-            {/* Détails du projet avec style amélioré */}
-            <div className="grid grid-cols-1 md:grid-cols-[2fr,3fr] gap-20 mb-20">
-              <div>
-                <h3 className="font-serif text-3xl mb-8">Project Details</h3>
-                <p className="text-gray-600 leading-relaxed text-xl">{project.details}</p>
+  return (
+    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      
+      <div className="fixed inset-0 overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center p-4">
+          <Dialog.Panel className="mx-auto max-w-4xl w-full bg-white rounded-2xl p-6 shadow-xl">
+            <div className="space-y-8">
+              {/* Header */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <Dialog.Title className="text-2xl font-serif">{project.title}</Dialog.Title>
+                    <p className="text-gray-600 mt-2 tracking-wide">{project.description}</p>
+                  </div>
+                  <button
+                    onClick={onClose}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+                
+                {/* Project Info */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
+                  <div>
+                    <h4 className="text-sm text-gray-500 tracking-wide uppercase">Category</h4>
+                    <p className="text-gray-900 tracking-wide">{project.category}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 tracking-wide uppercase">Project Type</h4>
+                    <p className="text-gray-900 tracking-wide">{project.projectType}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 tracking-wide uppercase">Year</h4>
+                    <p className="text-gray-900 tracking-wide">{project.year}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-gray-500 tracking-wide uppercase">Duration</h4>
+                    <p className="text-gray-900 tracking-wide">{project.duration}</p>
+                  </div>
+                </div>
+                {/* Elegant Separator */}
+                <div className="relative py-8">
+                  <div className="absolute left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+                  <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rotate-45 border border-gray-300" />
+                </div>
               </div>
 
-              {project.images.length > 1 && (
-                <div className="grid grid-cols-2 gap-8 self-start">
-                  {project.images.slice(1).map((img, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden shadow-md">
-                      {img ? (
-                        <Image
-                          src={img}
-                          alt={`${project.title} - image ${index + 1}`}
-                          fill
-                          className="object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            target.style.display = 'none'
-                            target.parentElement!.style.backgroundColor = '#f3f4f6'
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-100" />
-                      )}
+              {/* Project Steps */}
+              <div className="relative space-y-16 pl-8 before:absolute before:left-2 before:top-3 before:h-[calc(100%-24px)] before:w-px before:bg-gray-200">
+                {project.steps.map((step, index) => (
+                  <div 
+                    key={index}
+                    className="relative"
+                  >
+                    {/* Timeline dot */}
+                    <div className="absolute -left-8 top-3 h-4 w-4 rounded-full border-2 border-gray-300 bg-white" />
+                    
+                    <div className={cn(
+                      "grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-8 items-start"
+                    )}>
+                      <div className="space-y-4">
+                        <h3 className="text-xl tracking-wide uppercase">{step.title}</h3>
+                        <p className="text-gray-600 leading-relaxed tracking-wide">{step.description}</p>
+                      </div>
+                      <ImageZoom
+                        src={step.image}
+                        alt={step.title}
+                        isPlaceholder={step.image.includes('placeholder')}
+                        index={index}
+                        total={project.steps.length}
+                        onPrevious={() => setCurrentImageIndex(prev => Math.max(0, prev - 1))}
+                        onNext={() => setCurrentImageIndex(prev => Math.min(project.steps.length - 1, prev + 1))}
+                      />
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
 
-            {/* Informations supplémentaires avec style amélioré */}
-            <div className="border-t border-gray-100 pt-16">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-                <div>
-                  <h4 className="text-sm text-gray-400 font-medium uppercase mb-2">Year</h4>
-                  <p className="text-lg font-serif">2024</p>
-                </div>
-                <div>
-                  <h4 className="text-sm text-gray-400 font-medium uppercase mb-2">Role</h4>
-                  <p className="text-lg font-serif">Transportation Designer</p>
-                </div>
+              {/* Project Details */}
+              <div className="border-t pt-8">
+                <h3 className="text-xl tracking-wide uppercase mb-4">Project Details</h3>
+                <p className="text-gray-600 leading-relaxed tracking-wide">{project.details}</p>
               </div>
             </div>
-          </div>
+          </Dialog.Panel>
         </div>
       </div>
-    </div>,
-    document.body
+    </Dialog>
   )
 } 

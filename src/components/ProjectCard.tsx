@@ -4,13 +4,25 @@ import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import ProjectModal from './ProjectModal'
 import PlaceholderImage from './PlaceholderImage'
+import { cn } from '@/lib/utils'
+
+interface ProjectStep {
+  title: string
+  description: string
+  image: string
+  imagePosition: 'left' | 'right'
+}
 
 interface ProjectCardProps {
   title: string
   description: string
   category: string
+  projectType: string
+  brand?: string
+  year: number
+  duration: string
   thumbnail: string
-  images: string[]
+  steps: ProjectStep[]
   details: string
 }
 
@@ -18,8 +30,12 @@ export default function ProjectCard({
   title, 
   description, 
   category,
+  projectType,
+  brand,
+  year,
+  duration,
   thumbnail,
-  images,
+  steps,
   details
 }: ProjectCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -89,9 +105,15 @@ export default function ProjectCard({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         project={{ 
-          ...{ title, description, category, details },
-          thumbnail: imageError ? '' : thumbnail,
-          images: images.map(img => imageError ? '' : img)
+          title,
+          description,
+          category,
+          projectType,
+          brand,
+          year,
+          duration,
+          steps,
+          details
         }}
       />
     </>

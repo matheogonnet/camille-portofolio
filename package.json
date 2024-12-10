@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node -r ./scripts/suppress-warnings.js node_modules/next/dist/bin/next dev",
+    "build": "node -r ./scripts/suppress-warnings.js node_modules/next/dist/bin/next build",
+    "start": "node -r ./scripts/suppress-warnings.js node_modules/next/dist/bin/next start",
     "lint": "next lint --fix"
   },
   "dependencies": {
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@headlessui/react": "latest",
     "animejs": "latest",
     "clsx": "latest",
     "daisyui": "latest",

@@ -15,13 +15,34 @@ const PROJECTS = [
   {
     id: 1,
     title: "Coming Soon",
-    description: "Innovative Transportation Design Project",
-    category: "Concept Design",
+    description: "An innovative transportation design project exploring future mobility solutions",
+    category: "Transportation Design",
+    projectType: "Academic Project",
+    brand: "Concept Study",
+    year: 2024,
+    duration: "4 months",
     thumbnail: "/images/placeholder/coming-soon-1.jpg",
-    images: [
-      "/images/placeholder/coming-soon-1.jpg",
+    steps: [
+      {
+        title: "Initial Research & Concept",
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Preliminary research focused on understanding future mobility needs and emerging technologies that could shape transportation design.",
+        image: "/images/placeholder/step-1.jpg",
+        imagePosition: "right" as const
+      },
+      {
+        title: "Design Development",
+        description: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Exploration of form language and integration of innovative features through iterative sketching and 3D modeling.",
+        image: "/images/placeholder/step-2.jpg",
+        imagePosition: "left" as const
+      },
+      {
+        title: "Final Design Solution",
+        description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. The final design represents a harmonious blend of aesthetics and functionality.",
+        image: "/images/placeholder/step-3.jpg",
+        imagePosition: "right" as const
+      }
     ],
-    details: "An exciting new transportation design project that pushes the boundaries of sustainable mobility. Stay tuned for the full reveal of this innovative concept."
+    details: "A comprehensive exploration of future mobility solutions, combining innovative design thinking with practical considerations for tomorrow's transportation needs."
   }
 ]
 
