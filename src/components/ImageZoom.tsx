@@ -91,18 +91,19 @@ export default function ImageZoom({
                 <button
                   onClick={onPrevious}
                   className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 p-2"
+                  disabled={index === 0 || index === undefined}
                 >
                   <i className="bi bi-chevron-left text-2xl sm:text-3xl"></i>
                 </button>
                 <button
                   onClick={onNext}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
-                  disabled={index === total - 1}
+                  disabled={index === undefined || index === total - 1}
                 >
                   <i className="bi bi-chevron-right text-3xl"></i>
                 </button>
                 <div className="absolute bottom-2 sm:bottom-4 left-1/2">
-                  {index + 1} / {total}
+                  {index !== undefined ? `${index + 1} / ${total}` : ''}
                 </div>
               </>
             )}

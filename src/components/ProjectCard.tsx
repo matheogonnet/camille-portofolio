@@ -4,7 +4,6 @@ import { useState, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import ProjectModal from './ProjectModal'
 import PlaceholderImage from './PlaceholderImage'
-import { cn } from '@/lib/utils'
 
 interface ProjectStep {
   title: string

@@ -1,9 +1,7 @@
 'use client'
 
 import { Dialog } from '@headlessui/react'
-import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import PlaceholderImage from './PlaceholderImage'
 import ImageZoom from './ImageZoom'
 import { useState } from 'react'
 
@@ -29,7 +27,7 @@ interface ProjectModalProps {
 }
 
 export default function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [, setCurrentImageIndex] = useState(0)
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
