@@ -21,6 +21,7 @@ const PROJECTS = [
     brand: "Concept Study",
     year: 2024,
     duration: "4 months",
+    tags: ["3D", "Interior", "Concept", "Sustainable"],
     thumbnail: "/images/placeholder/coming-soon-1.jpg",
     steps: [
       {

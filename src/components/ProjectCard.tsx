@@ -21,6 +21,7 @@ interface ProjectCardProps {
   year: number
   duration: string
   thumbnail: string
+  tags: string[]
   steps: ProjectStep[]
   details: string
 }
@@ -34,6 +35,7 @@ export default function ProjectCard({
   year,
   duration,
   thumbnail,
+  tags,
   steps,
   details
 }: ProjectCardProps) {
@@ -111,6 +113,7 @@ export default function ProjectCard({
           brand,
           year,
           duration,
+          tags,
           steps,
           details
         }}

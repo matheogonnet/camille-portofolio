@@ -16,6 +16,7 @@ interface ProjectModalProps {
     brand?: string
     year: number
     duration: string
+    tags: string[]
     steps: {
       title: string
       description: string
@@ -43,6 +44,18 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                   <div>
                     <Dialog.Title className="text-xl sm:text-2xl font-serif">{project.title}</Dialog.Title>
                     <p className="text-sm sm:text-base text-gray-600 mt-2 tracking-wide">{project.description}</p>
+                    {project.tags && project.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {project.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700 tracking-wide hover:bg-gray-200 transition-colors duration-200"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={onClose}
@@ -79,7 +92,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               </div>
 
               {/* Project Steps */}
-              <div className="relative space-y-12 sm:space-y-16 pl-4 sm:pl-8">
+              <div className="relative space-y-12 sm:space-y-16 pl-4 sm:pl-8 before:absolute before:left-[5px] sm:before:left-[7px] before:top-3 before:h-[calc(100%-24px)] before:w-px before:bg-gray-200">
                 {project.steps.map((step, index) => (
                   <div key={index} className="relative">
                     {/* Timeline dot */}
