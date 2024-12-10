@@ -13,6 +13,39 @@ import ContactForm from '@/components/ContactForm'
 // Données de démonstration
 const PROJECTS = [
   {
+    id: 2,
+    title: "Kido",
+    description: "An innovative backpack designed specifically for Dacia vehicles, featuring the Youclip attachment system and integrated adventure accessories for children.",
+    category: "Product Design",
+    projectType: "Academic Project",
+    brand: "Dacia",
+    year: 2024,
+    duration: "3 months",
+    tags: ["3D Printing", "Dacia", "Design", "Innovation", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories", "Product Design", "Customizable"],
+    thumbnail: "/images/dacia/final.png",
+    steps: [
+      {
+        title: "Backpack Design",
+        description: "Development of a robust textile design with specific dimensions (36x26x6 cm) and a weight of 1.2 kg. The backpack is designed to be both functional and comfortable for children while maintaining a strong connection to the Dacia brand identity.",
+        image: "/images/dacia/bag.png",
+        imagePosition: "right" as const
+      },
+      {
+        title: "Integrated Accessories",
+        description: "Integration of adventure accessories including binoculars, compass, magnifying glass, and flashlight. The design also features a customization system allowing children to personalize their backpack with pins and patches.",
+        image: "/images/dacia/accessories.png",
+        imagePosition: "left" as const
+      },
+      {
+        title: "Final Product",
+        description: "The final product combines the Youclip attachment system, manufactured using 3D printing, with the textile backpack design. This creates a secure and practical solution for integrating children's storage needs with Dacia vehicles.",
+        image: "/images/dacia/final.png",
+        imagePosition: "right" as const
+      }
+    ],
+    details: "The Kido project represents a unique approach to vehicle accessories, specifically designed for Dacia vehicles. It combines practical functionality with a sense of adventure, encouraging children's independence while maintaining a connection to the family vehicle. The integration of the Youclip system ensures secure attachment, while the included accessories and customization options make each backpack unique to its owner."
+  },
+  {
     id: 1,
     title: "Coming Soon",
     description: "An innovative transportation design project exploring future mobility solutions",

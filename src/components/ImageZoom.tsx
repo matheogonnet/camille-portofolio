@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog } from '@headlessui/react'
 import Image from 'next/image'
 import PlaceholderImage from './PlaceholderImage'
@@ -14,23 +14,40 @@ interface ImageZoomProps {
   total?: number
   onPrevious?: () => void
   onNext?: () => void
+  steps: Array<{ image: string; title: string }>
 }
 
 export default function ImageZoom({ 
   src, 
   alt = '', 
   isPlaceholder = false,
-  index,
+  index = 0,
   total,
-  onPrevious,
-  onNext 
+  steps
 }: ImageZoomProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(index)
+
+  useEffect(() => {
+    setCurrentIndex(index)
+  }, [index])
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1)
+    }
+  }
+
+  const handleNext = () => {
+    if (currentIndex < (steps.length - 1)) {
+      setCurrentIndex(prev => prev + 1)
+    }
+  }
 
   // Keyboard shortcuts
   useKeyPress('Escape', () => setIsOpen(false))
-  useKeyPress('ArrowLeft', () => onPrevious && onPrevious())
-  useKeyPress('ArrowRight', () => onNext && onNext())
+  useKeyPress('ArrowLeft', handlePrevious)
+  useKeyPress('ArrowRight', handleNext)
 
   return (
     <>
@@ -71,15 +88,15 @@ export default function ImageZoom({
             </button>
 
             {/* Image */}
-            <div className="w-full h-full relative rounded-lg overflow-hidden bg-gray-800 animate-fade-scale">
+            <div className="w-full h-full relative rounded-lg overflow-hidden bg-gray-800">
               {isPlaceholder ? (
                 <PlaceholderImage />
               ) : (
                 <Image
-                  src={src || ''}
-                  alt={alt}
+                  src={steps[currentIndex].image}
+                  alt={steps[currentIndex].title}
                   fill
-                  className="object-contain animate-fade-in"
+                  className="object-contain transition-all duration-500 ease-in-out"
                   quality={95}
                 />
               )}
@@ -89,21 +106,21 @@ export default function ImageZoom({
             {total && total > 1 && (
               <>
                 <button
-                  onClick={onPrevious}
-                  className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 p-2"
-                  disabled={index === 0 || index === undefined}
+                  onClick={handlePrevious}
+                  className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 p-2 text-white hover:text-gray-300 transition-colors"
+                  disabled={currentIndex === 0}
                 >
                   <i className="bi bi-chevron-left text-2xl sm:text-3xl"></i>
                 </button>
                 <button
-                  onClick={onNext}
+                  onClick={handleNext}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
-                  disabled={index === undefined || index === total - 1}
+                  disabled={currentIndex === steps.length - 1}
                 >
                   <i className="bi bi-chevron-right text-3xl"></i>
                 </button>
-                <div className="absolute bottom-2 sm:bottom-4 left-1/2">
-                  {index !== undefined ? `${index + 1} / ${total}` : ''}
+                <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-white">
+                  {currentIndex + 1} / {total}
                 </div>
               </>
             )}
