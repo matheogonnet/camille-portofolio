@@ -267,3 +267,48 @@ html {
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Ajout de styles responsifs globaux */
+@layer utilities {
+  .container-responsive {
+    @apply px-4 sm:px-6 lg:px-8 mx-auto;
+    max-width: min(100%, theme('screens.2xl'));
+  }
+
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+
+  .heading-responsive {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+}
+
+/* Optimisations pour mobile */
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .timeline-container {
+    padding-left: 1rem;
+  }
+
+  .timeline-dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    left: -1rem;
+  }
+}
+
+/* Amélioration des interactions tactiles */
+@media (hover: none) {
+  .hover-effect {
+    @apply active:scale-95;
+    transition: transform 0.2s;
+  }
+
+  .touch-action-none {
+    touch-action: none;
+  }
+}

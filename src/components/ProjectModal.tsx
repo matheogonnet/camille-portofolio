@@ -36,26 +36,26 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       
       <div className="fixed inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
+        <div className="flex min-h-full items-center justify-center p-2 sm:p-4">
           <Dialog.Panel className="mx-auto max-w-4xl w-full bg-white rounded-2xl p-6 shadow-xl">
             <div className="space-y-8">
               {/* Header */}
               <div className="space-y-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <Dialog.Title className="text-2xl font-serif">{project.title}</Dialog.Title>
-                    <p className="text-gray-600 mt-2 tracking-wide">{project.description}</p>
+                    <Dialog.Title className="text-xl sm:text-2xl font-serif">{project.title}</Dialog.Title>
+                    <p className="text-sm sm:text-base text-gray-600 mt-2 tracking-wide">{project.description}</p>
                   </div>
                   <button
                     onClick={onClose}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 p-2 sm:p-0"
                   >
                     <i className="bi bi-x-lg"></i>
                   </button>
                 </div>
                 
                 {/* Project Info */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-6 pt-4">
                   <div>
                     <h4 className="text-sm text-gray-500 tracking-wide uppercase">Category</h4>
                     <p className="text-gray-900 tracking-wide">{project.category}</p>
@@ -81,21 +81,18 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               </div>
 
               {/* Project Steps */}
-              <div className="relative space-y-16 pl-8 before:absolute before:left-2 before:top-3 before:h-[calc(100%-24px)] before:w-px before:bg-gray-200">
+              <div className="relative space-y-12 sm:space-y-16 pl-4 sm:pl-8">
                 {project.steps.map((step, index) => (
-                  <div 
-                    key={index}
-                    className="relative"
-                  >
+                  <div key={index} className="relative">
                     {/* Timeline dot */}
-                    <div className="absolute -left-8 top-3 h-4 w-4 rounded-full border-2 border-gray-300 bg-white" />
+                    <div className="absolute -left-4 sm:-left-8 top-3 h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-gray-300 bg-white" />
                     
                     <div className={cn(
-                      "grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-8 items-start"
+                      "grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-4 sm:gap-8 items-start"
                     )}>
                       <div className="space-y-4">
-                        <h3 className="text-xl tracking-wide uppercase">{step.title}</h3>
-                        <p className="text-gray-600 leading-relaxed tracking-wide">{step.description}</p>
+                        <h3 className="text-lg sm:text-xl tracking-wide uppercase">{step.title}</h3>
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed tracking-wide">{step.description}</p>
                       </div>
                       <ImageZoom
                         src={step.image}

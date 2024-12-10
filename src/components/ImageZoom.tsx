@@ -60,14 +60,14 @@ export default function ImageZoom({
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-[60]">
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" aria-hidden="true" />
         
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="relative max-w-5xl w-full aspect-[4/3] bg-transparent">
+        <div className="fixed inset-0 flex items-center justify-center p-2 sm:p-4">
+          <Dialog.Panel className="relative w-[95vw] sm:w-[90vw] md:w-[85vw] max-w-5xl aspect-[4/3] bg-transparent">
             {/* Close button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+              className="absolute -top-8 sm:-top-12 right-0 text-white hover:text-gray-300 p-2"
             >
-              <i className="bi bi-x-lg text-2xl"></i>
+              <i className="bi bi-x-lg text-xl sm:text-2xl"></i>
             </button>
 
             {/* Image */}
@@ -90,10 +90,9 @@ export default function ImageZoom({
               <>
                 <button
                   onClick={onPrevious}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
-                  disabled={index === 0}
+                  className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 p-2"
                 >
-                  <i className="bi bi-chevron-left text-3xl"></i>
+                  <i className="bi bi-chevron-left text-2xl sm:text-3xl"></i>
                 </button>
                 <button
                   onClick={onNext}
@@ -102,7 +101,7 @@ export default function ImageZoom({
                 >
                   <i className="bi bi-chevron-right text-3xl"></i>
                 </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
+                <div className="absolute bottom-2 sm:bottom-4 left-1/2">
                   {index + 1} / {total}
                 </div>
               </>
