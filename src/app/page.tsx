@@ -21,7 +21,7 @@ const PROJECTS = [
     brand: "Dacia",
     year: 2024,
     duration: "3 months",
-    tags: ["3D Printing", "Dacia", "Design", "Innovation", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories", "Product Design", "Customizable"],
+    tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
     thumbnail: "/images/dacia/final.png",
     steps: [
       {
