@@ -92,11 +92,11 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               </div>
 
               {/* Project Steps */}
-              <div className="relative space-y-12 sm:space-y-16 pl-4 sm:pl-8 before:absolute before:left-[5px] sm:before:left-[7px] before:top-3 before:h-[calc(100%-24px)] before:w-px before:bg-gray-200">
+              <div className="relative space-y-12 sm:space-y-16 pl-8 sm:pl-12 before:absolute before:left-[6px] sm:before:left-[9px] before:top-3 before:h-[calc(100%-24px)] before:w-px before:bg-gray-200">
                 {project.steps.map((step, index) => (
                   <div key={index} className="relative">
                     {/* Timeline dot */}
-                    <div className="absolute -left-4 sm:-left-8 top-3 h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-gray-300 bg-white" />
+                    <div className="absolute -left-8 sm:-left-12 top-3 h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-gray-300 bg-white" />
                     
                     <div className={cn(
                       "grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-4 sm:gap-8 items-start"
