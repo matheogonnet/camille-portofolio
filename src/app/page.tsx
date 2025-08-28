@@ -283,9 +283,7 @@ export default function Home() {
                     key={project.id} 
                     className="project-card"
                   >
-                    <ProjectCard
-                      {...project}
-                    />
+                    <ProjectCard {...project} />
                   </div>
                 ))}
               </div>
