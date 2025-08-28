@@ -107,6 +107,20 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
     }
   }
 
+  const goToPreviousImage = () => {
+    const images = project.images
+    if (images && images.length > 0) {
+      setViewerIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+    }
+  }
+
+  const goToNextImage = () => {
+    const images = project.images
+    if (images && images.length > 0) {
+      setViewerIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+    }
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -288,6 +302,29 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
               >
                 <i className="bi bi-x-lg text-sm"></i>
               </button>
+              
+              {/* Navigation arrows - PC only */}
+              {project.images && project.images.length > 1 && (
+                <>
+                  {/* Left arrow - Previous image */}
+                  <button
+                    onClick={goToPreviousImage}
+                    className="hidden md:flex absolute left-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 bg-black/20 hover:bg-black/40 rounded-full h-8 w-8 items-center justify-center p-0 transition-all duration-200"
+                    aria-label="Previous image"
+                  >
+                    <i className="bi bi-chevron-left text-sm"></i>
+                  </button>
+                  
+                  {/* Right arrow - Next image */}
+                  <button
+                    onClick={goToNextImage}
+                    className="hidden md:flex absolute right-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 bg-black/20 hover:bg-black/40 rounded-full h-8 w-8 items-center justify-center p-0 transition-all duration-200"
+                    aria-label="Next image"
+                  >
+                    <i className="bi bi-chevron-right text-sm"></i>
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
