@@ -25,7 +25,6 @@ interface ProjectModalProps {
       imagePosition: 'left' | 'right'
     }[]
     images?: string[]
-    details: string
   }
 }
 

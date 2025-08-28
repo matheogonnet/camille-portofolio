@@ -24,7 +24,6 @@ interface ProjectCardProps {
   tags: string[]
   steps?: ProjectStep[]
   images?: string[]
-  details: string
 }
 
 export default function ProjectCard({ 
@@ -38,8 +37,7 @@ export default function ProjectCard({
   thumbnail,
   tags,
   steps,
-  images,
-  details
+  images
 }: ProjectCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -117,8 +115,7 @@ export default function ProjectCard({
           duration,
           tags,
           steps: steps || [],
-          images,
-          details
+          images
         }}
       />
     </>
