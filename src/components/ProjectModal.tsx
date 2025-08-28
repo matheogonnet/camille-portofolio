@@ -33,6 +33,80 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
   const [, setCurrentImageIndex] = useState(0)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
   const [viewerIndex, setViewerIndex] = useState(0)
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [lastTouchDistance, setLastTouchDistance] = useState(0)
+  const [lastTouchPosition, setLastTouchPosition] = useState({ x: 0, y: 0 })
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      )
+      setLastTouchDistance(distance)
+    } else if (e.touches.length === 1) {
+      setLastTouchPosition({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      })
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault()
+    
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      )
+      
+      if (lastTouchDistance > 0) {
+        const newScale = scale * (distance / lastTouchDistance)
+        setScale(Math.min(Math.max(newScale, 0.5), 3))
+      }
+      setLastTouchDistance(distance)
+    } else if (e.touches.length === 1 && scale > 1) {
+      // Pan when zoomed - only on X axis (left-right)
+      const touch = e.touches[0]
+      const deltaX = touch.clientX - lastTouchPosition.x
+      
+      setPosition(prev => ({
+        x: prev.x + deltaX,
+        y: 0 // Keep Y position fixed at 0
+      }))
+      
+      setLastTouchPosition({
+        x: touch.clientX,
+        y: touch.clientY
+      })
+    }
+  }
+
+  const handleTouchEnd = () => {
+    setLastTouchDistance(0)
+    setIsDragging(false)
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault()
+    const delta = e.deltaY > 0 ? 0.9 : 1.1
+    const newScale = scale * delta
+    setScale(Math.min(Math.max(newScale, 0.5), 3))
+  }
+
+  const handleDoubleClick = () => {
+    if (scale === 1) {
+      setScale(2)
+      setPosition({ x: 0, y: 0 })
+    } else {
+      setScale(1)
+      setPosition({ x: 0, y: 0 })
+    }
+  }
 
   return (
     <Dialog
@@ -184,14 +258,29 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             onTouchStart={(e) => e.stopPropagation()}
           >
             <div className="relative w-full max-w-6xl h-[80vh]">
-              <Image
-                src={project.images[viewerIndex]}
-                alt={`${project.title} image ${viewerIndex + 1}`}
-                fill
-                sizes="100vw"
-                className="object-contain"
-                priority
-              />
+              <div
+                className="relative w-full h-full"
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onWheel={handleWheel}
+                onDoubleClick={handleDoubleClick}
+                style={{
+                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                  transformOrigin: 'center',
+                  transition: isDragging ? 'none' : 'transform 0.1s ease-out'
+                }}
+              >
+                <Image
+                  src={project.images[viewerIndex]}
+                  alt={`${project.title} image ${viewerIndex + 1}`}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority
+                  draggable={false}
+                />
+              </div>
               <button
                 onClick={() => setIsViewerOpen(false)}
                 onTouchStart={() => setIsViewerOpen(false)}
