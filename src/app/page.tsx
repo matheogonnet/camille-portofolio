@@ -14,14 +14,14 @@ import ContactForm from '@/components/ContactForm'
 const PROJECTS = [
   {
     id: 3,
-    title: "SILMO 2024",
+    title: "Optical Design Competition",
     description: "Finalist in the Optical Design competition at the SILMO World Trade Fair in Paris.",
     category: "Product Design",
     projectType: "Design Competition",
-    brand: "SILMO",
+    brand: "Silmo",
     year: 2024,
-    duration: "2 months",
-    tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
+    duration: "1 month",
+    tags: [],
     thumbnail: "/images/silmo/SILMO_MAIN.png",
     steps: [],
     images: [
@@ -36,11 +36,11 @@ const PROJECTS = [
     title: "CES 2024",
     description: "Contribution to the Forvia seat project for CES 2024",
     category: "Transportation Design",
-    projectType: "Internship",
+    projectType: "Internship Project",
     brand: "Forvia",
     year: 2024,
-    duration: "6 months",
-    tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
+    duration: "2 months",
+    tags: [],
     thumbnail: "/images/forvia/FORVIA_MAIN.png",
     steps: [],
     images: [
@@ -59,7 +59,7 @@ const PROJECTS = [
     brand: "Dacia",
     year: 2024,
     duration: "3 months",
-    tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
+    tags: [],
     thumbnail: "/images/dacia/DACIA_MAIN.png",
     steps: [],
     images: [
@@ -190,8 +190,11 @@ export default function Home() {
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-4xl font-serif mb-16">About</h2>
               
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Industrial designer focused on automotive and product design,
+              </p>
               <p className="text-xl text-gray-600 leading-relaxed mb-16">
-                Industrial designer focused on automotive and product design, creating meaningful experiences through thoughtful form and function.
+                creating meaningful experiences through thoughtful form and function.
               </p>
               
               <div className="w-32 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-16"></div>
@@ -202,24 +205,18 @@ export default function Home() {
                     <i className="bi bi-mortarboard text-gray-400 text-xl"></i>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Education</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">ISD Rubika - Transportation Design</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">L'Ecole de Design Nantes Atlantique - Product & Transportation Design</p>
-                    </div>
+                  <div className="space-y-2 text-center">
+                    <p className="text-gray-600">ISD Rubika</p>
+                    <p className="text-gray-600">L'Ecole de Design Nantes Atlantique</p>
                   </div>
                 </div>
                 
                 <div>
                   <div className="flex items-center justify-center mb-4">
-                    <i className="bi bi-eye text-gray-400 text-xl"></i>
+                    <i className="bi bi-eye text-gray-400 text-gray-400 text-xl"></i>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Vision</h3>
-                  <p className="text-gray-600 italic">"I believe in merging human-centered thinking with design innovation, creating solutions that truly connect with people's needs and emotions."</p>
+                  <p className="text-gray-600 italic text-center">"I believe in merging human-centered thinking with design innovation, creating solutions that truly connect with people's needs and emotions."</p>
                 </div>
 
                 <div>
@@ -227,27 +224,11 @@ export default function Home() {
                     <i className="bi bi-heart text-gray-400 text-xl"></i>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Commitment</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">Association Petits Princes</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">Paris 2024 Olympic Games</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">Mécénat Chirurgie Cardiaque</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">Les Restos du Cœur</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
-                      <p className="text-gray-600">Pour un Sourire d'Enfant</p>
-                    </div>
+                  <div className="space-y-2 text-center">
+                    <p className="text-gray-600">Pour un Sourire d'Enfant</p>
+                    <p className="text-gray-600">Paris 2024 Olympic Games</p>
+                    <p className="text-gray-600">Mécénat Chirurgie Cardiaque</p>
+                    <p className="text-gray-600">Les Restos du Cœur</p>
                   </div>
                 </div>
               </div>

@@ -96,7 +96,7 @@ export default function ProjectCard({
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
           </div>
           <div className="p-6 space-y-2">
-            <span className="text-sm text-gray-500 font-medium">{category}</span>
+            <span className="text-sm text-gray-500 font-medium">{brand}</span>
             <h3 className="font-serif text-xl text-gray-900 group-hover:text-gray-600 transition-colors duration-300">{title}</h3>
           </div>
         </div>
