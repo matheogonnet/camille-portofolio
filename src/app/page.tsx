@@ -14,7 +14,7 @@ import ContactForm from '@/components/ContactForm'
 const PROJECTS = [
   {
     id: 4,
-    title: "Domestic Violence",
+    title: "AUXI",
     description: "I am currently working on my diploma thesis, on the topic of domestic violence. Where I'm trying to merge design and social innovation to help victims.",
     category: "Product Design",
     projectType: "Personal Project",
