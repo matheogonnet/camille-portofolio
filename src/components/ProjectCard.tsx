@@ -22,7 +22,8 @@ interface ProjectCardProps {
   duration: string
   thumbnail: string
   tags: string[]
-  steps: ProjectStep[]
+  steps?: ProjectStep[]
+  images?: string[]
   details: string
 }
 
@@ -37,6 +38,7 @@ export default function ProjectCard({
   thumbnail,
   tags,
   steps,
+  images,
   details
 }: ProjectCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -114,7 +116,8 @@ export default function ProjectCard({
           year,
           duration,
           tags,
-          steps,
+          steps: steps || [],
+          images,
           details
         }}
       />

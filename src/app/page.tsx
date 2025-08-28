@@ -10,7 +10,7 @@ import ScrollArrow from '@/components/ScrollArrow'
 import AboutCard from '@/components/AboutCard'
 import ContactForm from '@/components/ContactForm'
 
-// Données de démonstration
+
 const PROJECTS = [
   {
     id: 2,
@@ -22,26 +22,11 @@ const PROJECTS = [
     year: 2024,
     duration: "3 months",
     tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
-    thumbnail: "/images/dacia/final.png",
-    steps: [
-      {
-        title: "Backpack Design",
-        description: "Development of a robust textile design with specific dimensions (36x26x6 cm) and a weight of 1.2 kg. The backpack is designed to be both functional and comfortable for children while maintaining a strong connection to the Dacia brand identity.",
-        image: "/images/dacia/bag.png",
-        imagePosition: "right" as const
-      },
-      {
-        title: "Integrated Accessories",
-        description: "Integration of adventure accessories including binoculars, compass, magnifying glass, and flashlight. The design also features a customization system allowing children to personalize their backpack with pins and patches.",
-        image: "/images/dacia/accessories.png",
-        imagePosition: "left" as const
-      },
-      {
-        title: "Final Product",
-        description: "The final product combines the Youclip attachment system, manufactured using 3D printing, with the textile backpack design. This creates a secure and practical solution for integrating children's storage needs with Dacia vehicles.",
-        image: "/images/dacia/final.png",
-        imagePosition: "right" as const
-      }
+    thumbnail: "/images/dacia/DACIA_MAIN.png",
+    steps: [],
+    images: [
+      "/images/dacia/DACIA.001.jpeg",
+      "/images/dacia/DACIA.002.jpeg"
     ],
     details: "The Kido project represents a unique approach to vehicle accessories, specifically designed for Dacia vehicles. It combines practical functionality with a sense of adventure, encouraging children's independence while maintaining a connection to the family vehicle. The integration of the Youclip system ensures secure attachment, while the included accessories and customization options make each backpack unique to its owner."
   },
@@ -299,23 +284,24 @@ export default function Home() {
                 <div className="space-y-16">
                   {/* CV Download Section */}
                   <div className="space-y-4">
-                    <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Download Resume</h3>
-                    <div className="flex flex-col gap-4">
+                    <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Resume</h3>
+                    <div className="flex items-center justify-center gap-4">
                       <a 
-                        href="/cv/CV_CamilleGrand_FR.pdf" 
+                        href="/resume/CAMILLE_GRAND_CV_2025.pdf" 
                         target="_blank"
-                        className="group relative inline-flex items-center justify-center w-full px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
+                        rel="noopener noreferrer"
+                        aria-label="View resume PDF"
+                        className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-all duration-300"
                       >
-                        <span className="tracking-wide text-lg text-gray-900">CV Français</span>
-                        <i className="bi bi-download absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        <i className="bi bi-eye text-xl text-gray-900"></i>
                       </a>
                       <a 
-                        href="/cv/CV_CamilleGrand_EN.pdf" 
-                        target="_blank"
-                        className="group relative inline-flex items-center justify-center w-full px-8 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300"
+                        href="/resume/CAMILLE_GRAND_CV_2025.pdf" 
+                        download
+                        aria-label="Download resume PDF"
+                        className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-all duration-300"
                       >
-                        <span className="tracking-wide text-lg text-gray-900">CV English</span>
-                        <i className="bi bi-download absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
+                        <i className="bi bi-download text-xl text-gray-900"></i>
                       </a>
                     </div>
                   </div>
@@ -325,14 +311,14 @@ export default function Home() {
                     <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Social Links</h3>
                     <div className="flex flex-col gap-6">
                       <a 
-                        href="https://www.linkedin.com/in/camille-grand-a82aa5201/" 
+                        href="https://www.linkedin.com/in/camille-grand/" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-lg justify-center group text-gray-900 hover:text-gray-600"
                       >
                         <i className="bi bi-linkedin"></i>
                         <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
-                          LinkedIn
+                          in/camille-grand/
                         </span>
                       </a>
                       <a 
