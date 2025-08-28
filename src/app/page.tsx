@@ -14,6 +14,25 @@ import ContactForm from '@/components/ContactForm'
 const PROJECTS = [
   {
     id: 3,
+    title: "SILMO 2024",
+    description: "Finalist in the Optical Design competition at the SILMO World Trade Fair in Paris.",
+    category: "Product Design",
+    projectType: "Design Competition",
+    brand: "SILMO",
+    year: 2024,
+    duration: "2 months",
+    tags: ["3D", "Youclip", "Kids Adventure", "Backpack", "Vehicle Accessories"],
+    thumbnail: "/images/silmo/SILMO_MAIN.png",
+    steps: [],
+    images: [
+      "/images/silmo/SILMO.001.jpeg",
+      "/images/silmo/SILMO.002.jpeg",
+      "/images/silmo/SILMO.003.jpeg",
+      "/images/silmo/SILMO.004.jpeg"
+    ]  
+  },
+  {
+    id: 2,
     title: "CES 2024",
     description: "Contribution to the Forvia seat project for CES 2024",
     category: "Transportation Design",
@@ -32,7 +51,7 @@ const PROJECTS = [
     ]  
   },
   {
-    id: 2,
+    id: 1,
     title: "Kido",
     description: "An innovative backpack designed specifically for Dacia vehicles, featuring the Youclip attachment system and integrated adventure accessories for children.",
     category: "Product Design",
@@ -156,7 +175,7 @@ export default function Home() {
                     Camille Grand
                   </h1>
                   <p className="subtitle-text text-gray-600 text-xl opacity-0 tracking-widest uppercase">
-                    Transportation Designer
+                    Industrial Designer
                   </p>
                 </div>
               </div>
@@ -166,66 +185,69 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-20 px-8 bg-gray-50">
+        <section id="about" className="py-28 px-8 bg-gray-50">
           <FadeInSection>
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-serif mb-12">About</h2>
+              <h2 className="text-4xl font-serif mb-16">About</h2>
               
-              <p className="leading-relaxed text-lg text-gray-600 mb-16">
-                As a fifth-year Master's student in Transportation Design at ISD Rubika, 
-                I explore the intersection of mobility, innovation, and human-centered design.
+              <p className="text-xl text-gray-600 leading-relaxed mb-16">
+                Industrial designer focused on automotive and product design, creating meaningful experiences through thoughtful form and function.
               </p>
-
-              {/* Vision, Approach, Passion Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                <AboutCard
-                  icon="bi-eye"
-                  title="Vision"
-                  description="Shaping tomorrow's mobility through innovative design solutions that harmonize functionality, sustainability, and emotional connection."
-                />
-                <AboutCard
-                  icon="bi-bezier2"
-                  title="Approach"
-                  description="Combining analytical thinking with creative exploration to transform complex challenges into elegant, user-centric designs."
-                />
-                <AboutCard
-                  icon="bi-heart"
-                  title="Passion"
-                  description="Driven by the belief that thoughtful design can enhance human experiences and shape a more sustainable future of transportation."
-                />
-              </div>
-
-              {/* Education & Goals Section */}
-              <div className="relative py-8">
-                <div className="relative max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
-                  {/* Education Column - Left */}
-                  <div className="text-right space-y-4 md:pr-12">
-                    <span className="inline-block mb-4 text-sm tracking-wider text-gray-500 uppercase">
-                      Education
-                    </span>
-                    <h3 className="font-serif text-2xl mb-4">ISD Rubika</h3>
-                    <p className="text-gray-600">
-                      Currently pursuing my Master's degree, combining academic excellence 
-                      with hands-on experience in transportation design.
-                    </p>
+              
+              <div className="w-32 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-16"></div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div>
+                  <div className="flex items-center justify-center mb-4">
+                    <i className="bi bi-mortarboard text-gray-400 text-xl"></i>
                   </div>
-
-                  {/* Separator */}
-                  <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="w-px h-32 bg-gradient-to-b from-transparent via-gray-300 to-transparent"></div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300"></div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Education</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">ISD Rubika - Transportation Design</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">L'Ecole de Design Nantes Atlantique - Product & Transportation Design</p>
+                    </div>
                   </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-center mb-4">
+                    <i className="bi bi-eye text-gray-400 text-xl"></i>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Vision</h3>
+                  <p className="text-gray-600 italic">"I believe in merging human-centered thinking with design innovation, creating solutions that truly connect with people's needs and emotions."</p>
+                </div>
 
-                  {/* Goals Column - Right */}
-                  <div className="text-left space-y-4 md:pl-12">
-                    <span className="inline-block mb-4 text-sm tracking-wider text-gray-500 uppercase">
-                      Professional Goals
-                    </span>
-                    <h3 className="font-serif text-2xl mb-4">Future Vision</h3>
-                    <p className="text-gray-600">
-                      Contributing to shaping the future of mobility through innovative and 
-                      sustainable solutions that push the boundaries of what's possible.
-                    </p>
+                <div>
+                  <div className="flex items-center justify-center mb-4">
+                    <i className="bi bi-heart text-gray-400 text-xl"></i>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Commitment</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">Association Petits Princes</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">Paris 2024 Olympic Games</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">Mécénat Chirurgie Cardiaque</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">Les Restos du Cœur</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-gray-200 rounded-full flex-shrink-0"></div>
+                      <p className="text-gray-600">Pour un Sourire d'Enfant</p>
+                    </div>
                   </div>
                 </div>
               </div>
