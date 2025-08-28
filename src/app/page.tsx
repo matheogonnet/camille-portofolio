@@ -22,7 +22,7 @@ const PROJECTS = [
     year: 2025,
     duration: "12 months",
     tags: [],
-    thumbnail: "/images/prp/PRP.002.jpeg",
+    thumbnail: "/images/prp/PRP_MAIN.png",
     steps: [],
     images: [
       "/images/prp/PRP.001.jpeg",
@@ -32,7 +32,7 @@ const PROJECTS = [
   },
   {
     id: 3,
-    title: "Optical Design Competition",
+    title: "Spectapop",
     description: "Finalist in the Optical Design competition at the SILMO World Trade Fair in Paris.",
     category: "Product Design",
     projectType: "Design Competition",
@@ -96,7 +96,7 @@ const PROJECTS = [
     year: 2022,
     duration: "2 months",
     tags: [],
-    thumbnail: "/images/cyclauto/CYCLAUTO.002.jpeg",
+    thumbnail: "/images/cyclauto/CYCLAUTO_MAIN.png",
     steps: [],
     images: [
       "/images/cyclauto/CYCLAUTO.001.jpeg",
