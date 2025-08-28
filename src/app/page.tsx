@@ -20,7 +20,7 @@ const PROJECTS = [
     projectType: "Personal Project",
     brand: "Diploma Thesis",
     year: 2025,
-    duration: "6 months",
+    duration: "12 months",
     tags: [],
     thumbnail: "/images/prp/PRP.002.jpeg",
     steps: [],
@@ -84,6 +84,24 @@ const PROJECTS = [
       "/images/dacia/DACIA.001.jpeg",
       "/images/dacia/DACIA.002.jpeg",
       "/images/dacia/DACIA.003.jpeg"
+    ]
+  },
+  {
+    id: 0,
+    title: "Cyclauto",
+    description: "An innovative bicycle concept, designed as a sustainable and efficient alternative to traditional vehicles, emphasizing compactness and modularity.",
+    category: "Transportation Design",
+    projectType: "Internship Project",
+    brand: "Internship Project",
+    year: 2022,
+    duration: "2 months",
+    tags: [],
+    thumbnail: "/images/cyclauto/CYCLAUTO.002.jpeg",
+    steps: [],
+    images: [
+      "/images/cyclauto/CYCLAUTO.001.jpeg",
+      "/images/cyclauto/CYCLAUTO.002.jpeg",
+      "/images/cyclauto/CYCLAUTO.003.jpeg"
     ]
   }
 ]
