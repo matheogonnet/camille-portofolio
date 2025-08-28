@@ -246,6 +246,24 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                   </div>
                 )}
 
+                {/* Work in Progress Indicator for PRP Project */}
+                {project.title === "Domestic Violence" && (
+                  <div className="mt-16 text-center">
+                    <div className="relative">
+                      {/* Ligne horizontale animée */}
+                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-gray-400 to-transparent mx-auto mb-8 relative overflow-hidden">
+                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>{/* Le "shimmer" */}
+                        <div className="absolute inset-0 w-1/2 h-full bg-white animate-shimmer-loop"></div>
+                        </div>
+                      {/* Texte principal */}
+                      <div className="mb-6">
+                        <span className="text-lg text-gray-700 tracking-widest uppercase font-medium">
+                          Work Still in Progress
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
               </div>
             </div>

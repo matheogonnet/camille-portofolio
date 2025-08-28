@@ -359,3 +359,18 @@ html {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(156, 163, 175, 0.7);
 }
+
+
+@keyframes shimmer-loop {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-shimmer-loop {
+  animation: shimmer-loop 3s linear infinite;
+  will-change: transform;
+}

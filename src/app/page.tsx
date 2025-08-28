@@ -13,12 +13,30 @@ import ContactForm from '@/components/ContactForm'
 
 const PROJECTS = [
   {
+    id: 4,
+    title: "Domestic Violence",
+    description: "I am currently working on my diploma thesis, on the topic of domestic violence. Where I'm trying to merge design and social innovation to help victims.",
+    category: "Product Design",
+    projectType: "Personal Project",
+    brand: "Diploma Thesis",
+    year: 2025,
+    duration: "6 months",
+    tags: [],
+    thumbnail: "/images/prp/PRP.002.jpeg",
+    steps: [],
+    images: [
+      "/images/prp/PRP.001.jpeg",
+      "/images/prp/PRP.002.jpeg",
+      "/images/prp/PRP.003.jpeg",
+    ]  
+  },
+  {
     id: 3,
     title: "Optical Design Competition",
     description: "Finalist in the Optical Design competition at the SILMO World Trade Fair in Paris.",
     category: "Product Design",
     projectType: "Design Competition",
-    brand: "Silmo",
+    brand: "SILMO",
     year: 2024,
     duration: "1 month",
     tags: [],
