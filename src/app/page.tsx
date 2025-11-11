@@ -254,7 +254,7 @@ export default function Home() {
               <div className="mb-12">
                 <p className="text-lg text-gray-600 leading-relaxed">
                   I design products as vectors of emotion,<br />
-                  always at the service of people
+                  always at the service of people.
                 </p>
               </div>
 
@@ -291,7 +291,7 @@ export default function Home() {
               
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center mb-12 sm:mb-16 max-w-3xl mx-auto px-4">
                 All my work is driven by human connection and guided by five core values.<br className="hidden sm:block" />
-                Each shows a step in my path as a designer and how I create objects for people.
+                <span className="sm:hidden"> </span>Each shows a step in my path as a designer and how I create objects for people.
               </p>
               
               <div className="space-y-2">
@@ -378,17 +378,6 @@ export default function Home() {
                         <i className="bi bi-linkedin"></i>
                         <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
                           in/camille-grand/
-                        </span>
-                      </a>
-                      <a 
-                        href="https://www.instagram.com/camillegrand.design/" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-lg justify-center group text-gray-900 hover:text-gray-600"
-                      >
-                        <i className="bi bi-instagram"></i>
-                        <span className="border-b-2 border-transparent group-hover:border-gray-600 transition-colors duration-200">
-                          camillegrand.design
                         </span>
                       </a>
                       <a 
