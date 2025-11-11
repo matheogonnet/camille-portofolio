@@ -122,11 +122,11 @@ const getContrastColor = (hexColor: string): string => {
 
 // Mapping des valeurs aux projets
 const VALUE_PROJECTS = [
-  { value: 'Listen', color: '#c85a4a', projectId: 4, subtitle: 'Thesis', description: 'Domestic Violence' }, // AUXI
+  { value: 'Listen', color: '#c85a4a', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' }, // AUXI
   { value: 'Collaborate', color: '#8b3d52', projectId: 2, subtitle: 'FORVIA Seating', description: 'CES 2024' }, // FORVIA
-  { value: 'Meet', color: '#c4b83a', projectId: 3, subtitle: 'SILMO', description: 'Optical Design Competion' }, // SILMO
-  { value: 'Understand', color: '#4a7d7a', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competion' }, // Kido/Dacia
-  { value: 'Empower', color: '#7db8c8', projectId: 0, subtitle: 'Renault Group', description: 'Renault Interlude' }, // Cyclauto
+  { value: 'Meet', color: '#c4b83a', projectId: 3, subtitle: 'SILMO', description: 'Optical Design Competition' }, // SILMO
+  { value: 'Understand', color: '#4a7d7a', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competition' }, // Kido/Dacia
+  { value: 'Empower', color: '#7db8c8', projectId: 0, subtitle: 'Renault', description: 'Renault Interlude' }, // Cyclauto
 ]
 
 export default function Home() {
@@ -248,7 +248,7 @@ export default function Home() {
         <section id="about" className="py-28 px-8 bg-gray-50">
           <FadeInSection>
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-serif mb-16">My Vision</h2>
+              <h2 className="text-4xl font-serif mb-16">My vision</h2>
               
               {/* My vision content */}
               <div className="mb-12">
@@ -267,7 +267,7 @@ export default function Home() {
 
               {/* My volunteer work */}
               <div>
-                <h3 className="text-4xl font-serif text-gray-900 mb-6">My volunteer work</h3>
+                <h3 className="text-4xl font-serif text-gray-900 mb-6">Volunteer work</h3>
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
                   This human approach is not limited to my professional projects.
                 </p>
@@ -287,14 +287,14 @@ export default function Home() {
         <section id="projects" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <FadeInSection>
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-serif mb-6 sm:mb-8 text-center">My Projects</h2>
+              <h2 className="text-3xl sm:text-4xl font-serif mb-6 sm:mb-8 text-center">Projects</h2>
               
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center mb-12 sm:mb-16 max-w-3xl mx-auto px-4">
                 All my work is driven by human connection and guided by five core values.<br className="hidden sm:block" />
                 <span className="sm:hidden"> </span>Each shows a step in my path as a designer and how I create objects for people.
               </p>
               
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {VALUE_PROJECTS.map(({ value, color, subtitle, description }) => {
                   return (
                     <div
@@ -302,11 +302,11 @@ export default function Home() {
                       className="relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm"
                       style={{
                         backgroundColor: color,
-                        minHeight: '80px',
-                        height: '80px',
+                        minHeight: '120px',
+                        height: '120px',
                       }}
                     >
-                      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-20">
+                      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-full">
                         <h3 
                           className="text-xl sm:text-2xl font-serif tracking-wide text-white"
                         >
@@ -335,7 +335,7 @@ export default function Home() {
               <p 
                 className="text-xl text-gray-600 mb-16 tracking-wide inline-block hover:animate-wave cursor-default"
               >
-                let's keep in touch
+                Let's keep in touch !
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-[1fr,2fr] gap-16">
