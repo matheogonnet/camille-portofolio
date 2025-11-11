@@ -106,8 +106,32 @@ const PROJECTS = [
   }
 ]
 
+// Fonction pour déterminer la couleur du texte selon le contraste
+const getContrastColor = (hexColor: string): string => {
+  // Convertir hex en RGB
+  const r = parseInt(hexColor.slice(1, 3), 16)
+  const g = parseInt(hexColor.slice(3, 5), 16)
+  const b = parseInt(hexColor.slice(5, 7), 16)
+  
+  // Calculer la luminance relative
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  
+  // Retourner blanc si la couleur est sombre, noir si claire
+  return luminance > 0.5 ? '#000000' : '#ffffff'
+}
+
+// Mapping des valeurs aux projets
+const VALUE_PROJECTS = [
+  { value: 'Listen', color: '#c85a4a', projectId: 4, subtitle: 'Thesis', description: 'Domestic Violence' }, // AUXI
+  { value: 'Collaborate', color: '#8b3d52', projectId: 2, subtitle: 'FORVIA Seating', description: 'CES 2024' }, // FORVIA
+  { value: 'Meet', color: '#c4b83a', projectId: 3, subtitle: 'SILMO', description: 'Optical Design Competion' }, // SILMO
+  { value: 'Understand', color: '#4a7d7a', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competion' }, // Kido/Dacia
+  { value: 'Empower', color: '#7db8c8', projectId: 0, subtitle: 'Renault Group', description: 'Renault Interlude' }, // Cyclauto
+]
+
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [openValue, setOpenValue] = useState<string | null>(null)
 
   useLayoutEffect(() => {
     setIsLoaded(true)
@@ -220,72 +244,84 @@ export default function Home() {
           <ScrollArrow />
         </section>
 
-        {/* About Section */}
+        {/* My Vision Section */}
         <section id="about" className="py-28 px-8 bg-gray-50">
           <FadeInSection>
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-serif mb-16">About</h2>
+              <h2 className="text-4xl font-serif mb-16">My Vision</h2>
               
-              <p className="text-xl text-gray-600 leading-relaxed">
-                Industrial designer focused on automotive and product design,
-              </p>
-              <p className="text-xl text-gray-600 leading-relaxed mb-16">
-                creating meaningful experiences through thoughtful form and function.
-              </p>
-              
-              <div className="w-32 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto mb-16"></div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <i className="bi bi-mortarboard text-gray-400 text-xl"></i>
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Education</h3>
-                  <div className="space-y-2 text-center">
-                    <p className="text-gray-600">ISD Rubika</p>
-                    <p className="text-gray-600">L'Ecole de Design Nantes Atlantique</p>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <i className="bi bi-eye text-gray-400 text-gray-400 text-xl"></i>
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Vision</h3>
-                  <p className="text-gray-600 italic text-center">"I believe in merging human-centered thinking with design innovation, creating solutions that truly connect with people's needs and emotions."</p>
-                </div>
+              {/* My vision content */}
+              <div className="mb-12">
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  I design products as vectors of emotion,<br />
+                  always at the service of people
+                </p>
+              </div>
 
-                <div>
-                  <div className="flex items-center justify-center mb-4">
-                    <i className="bi bi-heart text-gray-400 text-xl"></i>
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Commitment</h3>
-                  <div className="space-y-2 text-center">
-                    <p className="text-gray-600">Pour un Sourire d'Enfant</p>
-                    <p className="text-gray-600">Paris 2024 Olympic Games</p>
-                    <p className="text-gray-600">Mécénat Chirurgie Cardiaque</p>
-                    <p className="text-gray-600">Les Restos du Cœur</p>
-                  </div>
+              {/* Separator */}
+              <div className="mb-12 flex items-center justify-center">
+                <div className="w-12 h-px bg-gray-300"></div>
+                <div className="mx-3 w-1 h-1 rounded-full bg-gray-400"></div>
+                <div className="w-12 h-px bg-gray-300"></div>
+              </div>
+
+              {/* My volunteer work */}
+              <div>
+                <h3 className="text-4xl font-serif text-gray-900 mb-6">My volunteer work</h3>
+                <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                  This human approach is not limited to my professional projects.
+                </p>
+                <div className="space-y-3 text-gray-600">
+                  <p>Petits Princes</p>
+                  <p>Paris 2024 Olympic Games</p>
+                  <p>Les Restos du Cœur</p>
+                  <p>Mécénat Chirurgie Cardiaque</p>
+                  <p>Pour un Sourire d'Enfant</p>
                 </div>
               </div>
             </div>
           </FadeInSection>
         </section>
 
-        {/* Projects Section */}
-        <section id="projects" className="py-20 px-8">
+        {/* My Projects Section */}
+        <section id="projects" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8">
           <FadeInSection>
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-serif mb-12 text-center">Projects</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {PROJECTS.map((project) => (
-                  <div 
-                    key={project.id} 
-                    className="project-card"
-                  >
-                    <ProjectCard {...project} />
-                  </div>
-                ))}
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl sm:text-4xl font-serif mb-6 sm:mb-8 text-center">My Projects</h2>
+              
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center mb-12 sm:mb-16 max-w-3xl mx-auto px-4">
+                All my work is driven by human connection and guided by five core values.<br className="hidden sm:block" />
+                Each shows a step in my path as a designer and how I create objects for people.
+              </p>
+              
+              <div className="space-y-2">
+                {VALUE_PROJECTS.map(({ value, color, subtitle, description }) => {
+                  return (
+                    <div
+                      key={value}
+                      className="relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm"
+                      style={{
+                        backgroundColor: color,
+                        minHeight: '80px',
+                        height: '80px',
+                      }}
+                    >
+                      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-20">
+                        <h3 
+                          className="text-xl sm:text-2xl font-serif tracking-wide text-white"
+                        >
+                          {value}
+                        </h3>
+                        <div className="flex items-center gap-2 sm:gap-4">
+                          <div className="text-right text-white">
+                            <div className="text-sm sm:text-base md:text-lg font-medium">{subtitle}</div>
+                            <div className="text-xs sm:text-sm opacity-90">{description}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </FadeInSection>

@@ -136,65 +136,17 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
             <div className="p-6 overflow-y-auto custom-scrollbar">
               <div className="space-y-8">
                 {/* Header */}
-                <div className="space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <Dialog.Title className="text-xl sm:text-2xl font-serif">{project.title}</Dialog.Title>
-                      <p className="text-sm sm:text-base text-gray-600 mt-2 tracking-wide">{project.description}</p>
-                      {project.tags && project.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {project.tags.map((tag, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700 tracking-wide hover:bg-gray-200 transition-all duration-200 hover:scale-105 hover:shadow-sm"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <button
-                      onClick={onClose}
-                      className="text-gray-500 hover:text-gray-700 p-2 sm:p-0"
-                    >
-                      <i className="bi bi-x-lg"></i>
-                    </button>
-                  </div>
-                  
-                  {/* Project Info */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-y-4 gap-x-6 pt-4">
-                    <div>
-                      <h4 className="text-sm text-gray-500 tracking-wide uppercase">Category</h4>
-                      <p className="text-gray-900 tracking-wide">{project.category}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm text-gray-500 tracking-wide uppercase">Project Type</h4>
-                      <p className="text-gray-900 tracking-wide">{project.projectType}</p>
-                    </div>
-                    {project.brand && (
-                      <div>
-                        <h4 className="text-sm text-gray-500 tracking-wide uppercase">Brand</h4>
-                        <p className="text-gray-900 tracking-wide">{project.brand}</p>
-                      </div>
-                    )}
-                    <div>
-                      <h4 className="text-sm text-gray-500 tracking-wide uppercase">Year</h4>
-                      <p className="text-gray-900 tracking-wide">{project.year}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm text-gray-500 tracking-wide uppercase">Duration</h4>
-                      <p className="text-gray-900 tracking-wide">{project.duration}</p>
-                    </div>
-                  </div>
-                  {/* Elegant Separator */}
-                  <div className="relative py-8 group">
-                    <div className="absolute left-1/2 -translate-x-1/2 w-48 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-                    <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rotate-45 border border-gray-300 transition-transform duration-300 group-hover:rotate-90" />
-                  </div>
+                <div className="flex justify-between items-start">
+                  <Dialog.Title className="text-xl sm:text-2xl font-serif">{project.title}</Dialog.Title>
+                  <button
+                    onClick={onClose}
+                    className="text-gray-500 hover:text-gray-700 p-2 sm:p-0"
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
                 </div>
 
-                {/* Project Content */}
+                {/* Project Images */}
                 {project.images && project.images.length > 0 ? (
                   <div className="space-y-6">
                     {project.images.map((imgSrc, idx) => (
@@ -244,25 +196,6 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                         </div>
                       </div>
                     ))}
-                  </div>
-                )}
-
-                {/* Work in Progress Indicator for AUXI Project */}
-                {project.title === "AUXI" && (
-                  <div className="mt-16 text-center">
-                    <div className="relative">
-                      {/* Ligne horizontale animée */}
-                      <div className="w-40 h-0.5 bg-gradient-to-r from-transparent via-gray-400 to-transparent mx-auto mb-8 relative overflow-hidden">
-                        <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>{/* Le "shimmer" */}
-                        <div className="absolute inset-0 w-1/2 h-full bg-white animate-shimmer-loop"></div>
-                      </div>
-                      {/* Texte principal */}
-                      <div className="mb-6">
-                        <span className="text-lg text-gray-700 tracking-widest uppercase font-medium">
-                          Work Still in Progress
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 )}
                 
