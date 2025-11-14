@@ -155,13 +155,15 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                         className="relative w-full cursor-pointer"
                         onClick={() => { setViewerIndex(idx); setIsViewerOpen(true) }}
                       >
-                        <div className="relative w-full aspect-[3500/1350] overflow-hidden rounded-lg border border-gray-100 bg-white">
+                        <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-gray-100 bg-white">
                           <Image
                             src={imgSrc}
                             alt={`${project.title} image ${idx + 1}`}
                             fill
                             sizes="100vw"
                             className="object-contain"
+                            quality={100}
+                            unoptimized={true}
                             priority={idx === 0}
                           />
                           <div className="pointer-events-none absolute bottom-2 left-2">
@@ -224,7 +226,7 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
           >
             <div className="relative w-full max-w-6xl h-[80vh]">
               <div
-                className="relative w-full h-full"
+                className="relative w-full h-full flex items-center justify-center"
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
@@ -233,17 +235,25 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                 style={{
                   transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                   transformOrigin: 'center',
-                  transition: isDragging ? 'none' : 'transform 0.1s ease-out'
+                  transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
                 }}
               >
-                <Image
+                <img
                   src={project.images[viewerIndex]}
                   alt={`${project.title} image ${viewerIndex + 1}`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority
+                  className="max-w-full max-h-full w-auto h-auto object-contain"
                   draggable={false}
+                  style={{
+                    imageRendering: 'auto',
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    WebkitTransform: 'translateZ(0)',
+                    transform: 'translateZ(0)'
+                  }}
                 />
               </div>
               <button

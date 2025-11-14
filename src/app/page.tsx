@@ -1,103 +1,71 @@
 'use client'
 
+import React from 'react'
 import anime from 'animejs'
-import { useLayoutEffect, useState } from 'react'
-import ProjectCard from '@/components/ProjectCard'
+import { useLayoutEffect, useState, useRef, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import FadeInSection from '@/components/FadeInSection'
 import Image from 'next/image'
 import ScrollArrow from '@/components/ScrollArrow'
-import AboutCard from '@/components/AboutCard'
 import ContactForm from '@/components/ContactForm'
 
 
 const PROJECTS = [
   {
     id: 4,
-    title: "AUXI",
-    description: "I am currently working on my diploma thesis, on the topic of domestic violence. Where I'm trying to merge design and social innovation to help victims.",
-    category: "Product Design",
-    projectType: "Personal Project",
-    brand: "Diploma Thesis",
-    year: 2025,
-    duration: "12 months",
-    tags: [],
-    thumbnail: "/images/prp/PRP_MAIN.png",
-    steps: [],
     images: [
       "/images/prp/PRP.001.jpeg",
       "/images/prp/PRP.002.jpeg",
       "/images/prp/PRP.003.jpeg",
+      "/images/prp/PRP.004.jpeg",
+      "/images/prp/PRP.005.jpeg",
+      "/images/prp/PRP.006.jpeg",
+      "/images/prp/PRP.007.jpeg",
+      "/images/prp/PRP.008.jpeg",
+      "/images/prp/PRP.009.jpeg",
+      "/images/prp/PRP.010.jpeg",
+      "/images/prp/PRP.011.jpeg",
+      "/images/prp/PRP.012.jpeg",
+      "/images/prp/PRP.013.jpeg",
+      "/images/prp/PRP.014.jpeg"
     ]  
   },
   {
     id: 3,
-    title: "Spectapop",
-    description: "Finalist in the Optical Design competition at the SILMO World Trade Fair in Paris.",
-    category: "Product Design",
-    projectType: "Design Competition",
-    brand: "SILMO",
-    year: 2024,
-    duration: "1 month",
-    tags: [],
-    thumbnail: "/images/silmo/SILMO_MAIN.png",
-    steps: [],
     images: [
       "/images/silmo/SILMO.001.jpeg",
       "/images/silmo/SILMO.002.jpeg",
       "/images/silmo/SILMO.003.jpeg",
-      "/images/silmo/SILMO.004.jpeg"
+      "/images/silmo/SILMO.004.jpeg",
+      "/images/silmo/SILMO.005.jpeg"
     ]  
   },
   {
     id: 2,
-    title: "CES 2024",
-    description: "Contribution to the Forvia seat project for CES 2024",
-    category: "Transportation Design",
-    projectType: "Internship Project",
-    brand: "Forvia",
-    year: 2024,
-    duration: "2 months",
-    tags: [],
-    thumbnail: "/images/forvia/FORVIA_MAIN.png",
-    steps: [],
     images: [
       "/images/forvia/FORVIA.001.jpeg",
       "/images/forvia/FORVIA.002.jpeg",
       "/images/forvia/FORVIA.003.jpeg",
-      "/images/forvia/FORVIA.004.jpeg"
+      "/images/forvia/FORVIA.004.jpeg",
+      "/images/forvia/FORVIA.005.jpeg"
     ]  
   },
   {
     id: 1,
-    title: "Kido",
-    description: "An innovative backpack designed specifically for Dacia vehicles, featuring the Youclip attachment system and integrated adventure accessories for children.",
-    category: "Product Design",
-    projectType: "Academic Project",
-    brand: "Dacia",
-    year: 2024,
-    duration: "3 months",
-    tags: [],
-    thumbnail: "/images/dacia/DACIA_MAIN.png",
-    steps: [],
     images: [
       "/images/dacia/DACIA.001.jpeg",
       "/images/dacia/DACIA.002.jpeg",
-      "/images/dacia/DACIA.003.jpeg"
+      "/images/dacia/DACIA.003.jpeg",
+      "/images/dacia/DACIA.004.jpeg",
+      "/images/dacia/DACIA.005.jpeg",
+      "/images/dacia/DACIA.006.jpeg",
+      "/images/dacia/DACIA.007.jpeg",
+      "/images/dacia/DACIA.008.jpeg",
+      "/images/dacia/DACIA.009.jpeg"
     ]
   },
   {
     id: 0,
-    title: "Cyclauto",
-    description: "An innovative bicycle concept, designed as a sustainable and efficient alternative to traditional vehicles, emphasizing compactness and modularity.",
-    category: "Transportation Design",
-    projectType: "Internship Project",
-    brand: "Internship Project",
-    year: 2022,
-    duration: "2 months",
-    tags: [],
-    thumbnail: "/images/cyclauto/CYCLAUTO_MAIN.png",
-    steps: [],
     images: [
       "/images/cyclauto/CYCLAUTO.001.jpeg",
       "/images/cyclauto/CYCLAUTO.002.jpeg",
@@ -105,20 +73,6 @@ const PROJECTS = [
     ]
   }
 ]
-
-// Fonction pour déterminer la couleur du texte selon le contraste
-const getContrastColor = (hexColor: string): string => {
-  // Convertir hex en RGB
-  const r = parseInt(hexColor.slice(1, 3), 16)
-  const g = parseInt(hexColor.slice(3, 5), 16)
-  const b = parseInt(hexColor.slice(5, 7), 16)
-  
-  // Calculer la luminance relative
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  
-  // Retourner blanc si la couleur est sombre, noir si claire
-  return luminance > 0.5 ? '#000000' : '#ffffff'
-}
 
 // Mapping des valeurs aux projets
 const VALUE_PROJECTS = [
@@ -132,6 +86,133 @@ const VALUE_PROJECTS = [
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [openValue, setOpenValue] = useState<string | null>(null)
+  const [isViewerOpen, setIsViewerOpen] = useState(false)
+  const [viewerIndex, setViewerIndex] = useState(0)
+  const [viewerImages, setViewerImages] = useState<string[]>([])
+  const [scale, setScale] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [lastTouchDistance, setLastTouchDistance] = useState(0)
+  const [lastTouchPosition, setLastTouchPosition] = useState({ x: 0, y: 0 })
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 2) {
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      )
+      setLastTouchDistance(distance)
+    } else if (e.touches.length === 1) {
+      setLastTouchPosition({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY
+      })
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault()
+    
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      const distance = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      )
+      
+      if (lastTouchDistance > 0) {
+        const newScale = scale * (distance / lastTouchDistance)
+        setScale(Math.min(Math.max(newScale, 0.5), 3))
+      }
+      setLastTouchDistance(distance)
+    } else if (e.touches.length === 1 && scale > 1) {
+      // Pan when zoomed - only on X axis (left-right)
+      const touch = e.touches[0]
+      const deltaX = touch.clientX - lastTouchPosition.x
+      
+      setPosition(prev => ({
+        x: prev.x + deltaX,
+        y: 0 // Keep Y position fixed at 0
+      }))
+      
+      setLastTouchPosition({
+        x: touch.clientX,
+        y: touch.clientY
+      })
+    }
+  }
+
+  const handleTouchEnd = () => {
+    setLastTouchDistance(0)
+    setIsDragging(false)
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault()
+    const delta = e.deltaY > 0 ? 0.9 : 1.1
+    const newScale = scale * delta
+    setScale(Math.min(Math.max(newScale, 0.5), 3))
+  }
+
+  const handleDoubleClick = () => {
+    if (scale === 1) {
+      setScale(2)
+      setPosition({ x: 0, y: 0 })
+    } else {
+      setScale(1)
+      setPosition({ x: 0, y: 0 })
+    }
+  }
+
+  const goToPreviousImage = () => {
+    if (viewerImages.length > 0) {
+      setViewerIndex((prev) => (prev === 0 ? viewerImages.length - 1 : prev - 1))
+      setScale(1)
+      setPosition({ x: 0, y: 0 })
+    }
+  }
+
+  const goToNextImage = () => {
+    if (viewerImages.length > 0) {
+      setViewerIndex((prev) => (prev === viewerImages.length - 1 ? 0 : prev + 1))
+      setScale(1)
+      setPosition({ x: 0, y: 0 })
+    }
+  }
+
+  const handleBannerClick = (value: string, projectId: number) => {
+    // Only allow opening for Forvia (projectId: 2), SILMO (projectId: 3), Dacia (projectId: 1), and PRP (projectId: 4)
+    if (projectId !== 2 && projectId !== 3 && projectId !== 1 && projectId !== 4) return
+    
+    if (openValue === value) {
+      setOpenValue(null)
+    } else {
+      setOpenValue(value)
+    }
+  }
+
+  const handleImageClick = (images: string[], index: number) => {
+    setViewerImages(images)
+    setViewerIndex(index)
+    setIsViewerOpen(true)
+    setScale(1)
+    setPosition({ x: 0, y: 0 })
+  }
+
+  // Control video play/pause based on banner open state
+  useEffect(() => {
+    if (videoRef.current) {
+      const isForviaOpen = openValue === 'Collaborate'
+      if (isForviaOpen) {
+        videoRef.current.play().catch((err) => {
+          console.error('Error playing video:', err)
+        })
+      } else {
+        videoRef.current.pause()
+      }
+    }
+  }, [openValue])
 
   useLayoutEffect(() => {
     setIsLoaded(true)
@@ -255,15 +336,15 @@ export default function Home() {
                 <p className="text-lg text-gray-600 leading-relaxed">
                   I design products as vectors of emotion,<br />
                   always at the service of people.
-                </p>
-              </div>
+                    </p>
+                  </div>
 
-              {/* Separator */}
+                  {/* Separator */}
               <div className="mb-12 flex items-center justify-center">
                 <div className="w-12 h-px bg-gray-300"></div>
                 <div className="mx-3 w-1 h-1 rounded-full bg-gray-400"></div>
                 <div className="w-12 h-px bg-gray-300"></div>
-              </div>
+                  </div>
 
               {/* My volunteer work */}
               <div>
@@ -295,29 +376,134 @@ export default function Home() {
               </p>
               
               <div className="space-y-1">
-                {VALUE_PROJECTS.map(({ value, color, subtitle, description }) => {
+                {VALUE_PROJECTS.map(({ value, color, subtitle, description, projectId }) => {
+                  const project = PROJECTS.find(p => p.id === projectId)
+                  const isOpen = openValue === value
+                  const canOpen = projectId === 2 || projectId === 3 || projectId === 1 || projectId === 4 // Forvia, SILMO, Dacia, and PRP can open
+                  
                   return (
-                    <div
-                      key={value}
-                      className="relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm"
-                      style={{
-                        backgroundColor: color,
-                        minHeight: '120px',
-                        height: '120px',
-                      }}
-                    >
-                      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-full">
-                        <h3 
-                          className="text-xl sm:text-2xl font-serif tracking-wide text-white"
-                        >
-                          {value}
-                        </h3>
-                        <div className="flex items-center gap-2 sm:gap-4">
-                          <div className="text-right text-white">
-                            <div className="text-sm sm:text-base md:text-lg font-medium">{subtitle}</div>
-                            <div className="text-xs sm:text-sm opacity-90">{description}</div>
+                    <div key={value}>
+                      <div
+                        onClick={() => canOpen && handleBannerClick(value, projectId)}
+                        className={`relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm ${
+                          canOpen ? 'cursor-pointer hover:shadow-md' : ''
+                        }`}
+                        style={{
+                          backgroundColor: color,
+                          minHeight: '120px',
+                          height: isOpen ? 'auto' : '120px',
+                        }}
+                      >
+                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-full">
+                          <h3 
+                            className="text-xl sm:text-2xl font-serif tracking-wide text-white"
+                          >
+                            {value}
+                          </h3>
+                          <div className="flex items-center gap-2 sm:gap-4">
+                            <div className="text-right text-white">
+                              <div className="text-sm sm:text-base md:text-lg font-medium">{subtitle}</div>
+                              <div className="text-xs sm:text-sm opacity-90">{description}</div>
+                            </div>
+                            {canOpen && (
+                              <i 
+                                className={`bi bi-chevron-down text-white transition-transform duration-300 ${
+                                  isOpen ? 'rotate-180' : ''
+                                }`}
+                              />
+                            )}
                           </div>
                         </div>
+                        
+                        {/* Images section when opened */}
+                        {isOpen && project?.images && project.images.length > 0 && (
+                          <div className="px-4 sm:px-6 md:px-8 pb-6 space-y-6">
+                            {/* Separator line for Forvia, SILMO, Dacia, and PRP */}
+                            {(projectId === 2 || projectId === 3 || projectId === 1 || projectId === 4) && (
+                              <div className="flex items-center justify-center max-w-3xl mx-auto pt-2">
+                                <div className="w-24 h-px bg-white/30"></div>
+                                <div className="mx-3 w-1 h-1 rounded-full bg-white/40"></div>
+                                <div className="w-24 h-px bg-white/30"></div>
+                              </div>
+                            )}
+                            {/* Context text for Forvia before first image */}
+                            {projectId === 2 && (
+                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                                The CES in Las Vegas is one of the biggest tech shows in the world,<br />
+                                where Forvia showcases its innovations every two years.
+                              </p>
+                            )}
+                            {/* Context text for SILMO before first image */}
+                            {projectId === 3 && (
+                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                                What attracted me most to this competition was the freedom: glasses allow any designer, whatever their specialty, to create emotion and meaning for the user.
+                              </p>
+                            )}
+                            {/* Context text for Dacia before first image */}
+                            {projectId === 1 && (
+                              <div className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto space-y-3">
+                                <p>
+                                  The goal is to design the rest of the YouClip range to meet passengers' needs.
+                                </p>
+                                <p>
+                                  YouClip is Dacia's flexible system for personalizing your car interior.
+                                </p>
+                              </div>
+                            )}
+                            {/* Context text for PRP before first image */}
+                            {projectId === 4 && (
+                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                                In France, femicides keep rising with more than 130 cases a year while only 1 in 6 victims file a complaint. Built on emotional dependence and manipulative techniques like DARVO, this project explores how design can respond to this silent emergency.
+                              </p>
+                            )}
+                            {project.images.map((imgSrc, idx) => (
+                              <div 
+                                key={idx} 
+                                className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleImageClick(project.images || [], idx)
+                                }}
+                              >
+                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20 bg-white/10">
+                                  <Image
+                                    src={imgSrc}
+                                    alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                    fill
+                                    sizes="100vw"
+                                    className="object-contain"
+                                    quality={100}
+                                    unoptimized={true}
+                                    priority={idx === 0}
+                                  />
+                                  <div className="pointer-events-none absolute bottom-2 left-2">
+                                    <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                      <i className="bi bi-zoom-in text-xs"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                  </div>
+                ))}
+                            {/* Video for Forvia */}
+                            {projectId === 2 && (
+                              <div 
+                                className="relative w-full max-w-3xl mx-auto"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20 bg-white/10">
+                                  <video
+                                    ref={videoRef}
+                                    src="/images/forvia/FORVIA.VIDEO.mp4"
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="w-full h-full object-contain"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )
@@ -402,6 +588,93 @@ export default function Home() {
             </div>
           </FadeInSection>
         </section>
+
+        {/* Image Viewer */}
+        {isViewerOpen && viewerImages.length > 0 && (
+          <div 
+            className="fixed inset-0 z-[60]" 
+            onClick={(e) => e.stopPropagation()} 
+            onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+          >
+            <div 
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              onClick={() => setIsViewerOpen(false)}
+              onTouchStart={() => setIsViewerOpen(false)}
+            />
+            <div 
+              className="absolute inset-0 flex items-center justify-center p-4" 
+              onClick={(e) => e.stopPropagation()} 
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
+              <div className="relative w-full max-w-6xl h-[80vh]">
+                <div
+                  className="relative w-full h-full flex items-center justify-center"
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  onWheel={handleWheel}
+                  onDoubleClick={handleDoubleClick}
+                  style={{
+                    transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transformOrigin: 'center',
+                    transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden'
+                  }}
+                >
+                  <img
+                    src={viewerImages[viewerIndex]}
+                    alt={`Image ${viewerIndex + 1}`}
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
+                    draggable={false}
+                    style={{
+                      imageRendering: 'auto',
+                      willChange: 'transform',
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      WebkitTransform: 'translateZ(0)',
+                      transform: 'translateZ(0)'
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={() => setIsViewerOpen(false)}
+                  onTouchStart={() => setIsViewerOpen(false)}
+                  className="absolute top-3 right-3 text-white/90 hover:text-white bg-black/40 hover:bg-black/60 rounded-full h-8 w-8 flex items-center justify-center p-0 touch-manipulation"
+                  aria-label="Close image viewer"
+                >
+                  <i className="bi bi-x-lg text-sm"></i>
+                </button>
+                
+                {/* Navigation arrows - PC only */}
+                {viewerImages.length > 1 && (
+                  <>
+                    {/* Left arrow - Previous image */}
+                    <button
+                      onClick={goToPreviousImage}
+                      className="hidden md:flex absolute left-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 bg-black/20 hover:bg-black/40 rounded-full h-8 w-8 items-center justify-center p-0 transition-all duration-200"
+                      aria-label="Previous image"
+                    >
+                      <i className="bi bi-chevron-left text-sm"></i>
+                    </button>
+                    
+                    {/* Right arrow - Next image */}
+                    <button
+                      onClick={goToNextImage}
+                      className="hidden md:flex absolute right-1 top-1/2 -translate-y-1/2 text-white/60 hover:text-white/80 bg-black/20 hover:bg-black/40 rounded-full h-8 w-8 items-center justify-center p-0 transition-all duration-200"
+                      aria-label="Next image"
+                    >
+                      <i className="bi bi-chevron-right text-sm"></i>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
