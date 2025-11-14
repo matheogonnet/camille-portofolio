@@ -68,9 +68,18 @@ const PROJECTS = [
   {
     id: 0,
     images: [
-      "/images/cyclauto/CYCLAUTO.001.jpeg",
-      "/images/cyclauto/CYCLAUTO.002.jpeg",
-      "/images/cyclauto/CYCLAUTO.003.jpeg"
+      "/images/renault/RENAULT.001.jpeg",
+      "/images/renault/RENAULT.002.jpeg",
+      "/images/renault/RENAULT.003.jpeg",
+      "/images/renault/RENAULT.004.jpeg",
+      "/images/renault/RENAULT.005.jpeg",
+      "/images/renault/RENAULT.006.jpeg",
+      "/images/renault/RENAULT.007.jpeg",
+      "/images/renault/RENAULT.008.jpeg",
+      "/images/renault/RENAULT.009.jpeg",
+      "/images/renault/RENAULT.010.jpeg",
+      "/images/renault/RENAULT.011.jpeg",
+      "/images/renault/RENAULT.012.jpeg"
     ]
   }
 ]
@@ -183,13 +192,18 @@ export default function Home() {
   }
 
   const handleBannerClick = (value: string, projectId: number) => {
-    // Only allow opening for Forvia (projectId: 2), SILMO (projectId: 3), Dacia (projectId: 1), and PRP (projectId: 4)
-    if (projectId !== 2 && projectId !== 3 && projectId !== 1 && projectId !== 4) return
-    
+    // Allow opening for all projects
     if (openValue === value) {
       setOpenValue(null)
     } else {
       setOpenValue(value)
+      // Scroll to the opened banner after a short delay to allow DOM update
+      setTimeout(() => {
+        const bannerElement = document.querySelector(`[data-banner-value="${value}"]`)
+        if (bannerElement) {
+          bannerElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
     }
   }
 
@@ -201,15 +215,78 @@ export default function Home() {
     setPosition({ x: 0, y: 0 })
   }
 
+  // Preload all images and video on page load
+  useEffect(() => {
+    // Collect all image URLs from all projects
+    const allImageUrls = PROJECTS.flatMap(project => project.images || [])
+    
+    // Preload all images
+    allImageUrls.forEach((imageUrl) => {
+      const img = new window.Image()
+      img.src = imageUrl
+    })
+    
+    // Preload video
+    const video = document.createElement('video')
+    video.src = '/images/forvia/FORVIA.VIDEO.mp4'
+    video.preload = 'auto'
+    video.muted = true
+    video.playsInline = true
+    // Keep video element in memory for faster access
+    document.body.appendChild(video)
+    video.style.display = 'none'
+    
+    return () => {
+      // Cleanup: remove hidden video element
+      if (video.parentNode) {
+        video.parentNode.removeChild(video)
+      }
+    }
+  }, [])
+
   // Control video play/pause based on banner open state
   useEffect(() => {
-    if (videoRef.current) {
-      const isForviaOpen = openValue === 'Collaborate'
-      if (isForviaOpen) {
-        videoRef.current.play().catch((err) => {
-          console.error('Error playing video:', err)
-        })
-      } else {
+    const isForviaOpen = openValue === 'Collaborate'
+    if (isForviaOpen) {
+      // Wait longer after scroll to ensure video is mounted and visible
+      const timeoutId = setTimeout(() => {
+        if (videoRef.current) {
+          const video = videoRef.current
+          // Try to play the video
+          const tryPlay = () => {
+            if (video && !video.paused) return // Already playing
+            video.play().catch(() => {
+              // Ignore errors silently
+            })
+          }
+          
+          // If video is ready, play immediately
+          if (video.readyState >= 2) {
+            tryPlay()
+          } else {
+            // Otherwise wait for it to load
+            const handleCanPlay = () => {
+              tryPlay()
+              video.removeEventListener('canplay', handleCanPlay)
+            }
+            video.addEventListener('canplay', handleCanPlay)
+          }
+        }
+      }, 500) // Increased delay to account for scroll animation
+      
+      // Monitor video to ensure it keeps playing
+      const checkInterval = setInterval(() => {
+        if (videoRef.current && isForviaOpen && videoRef.current.paused) {
+          videoRef.current.play().catch(() => {})
+        }
+      }, 1000) // Check every second
+      
+      return () => {
+        clearTimeout(timeoutId)
+        clearInterval(checkInterval)
+      }
+    } else {
+      if (videoRef.current) {
         videoRef.current.pause()
       }
     }
@@ -380,10 +457,10 @@ export default function Home() {
                 {VALUE_PROJECTS.map(({ value, color, subtitle, description, projectId }) => {
                   const project = PROJECTS.find(p => p.id === projectId)
                   const isOpen = openValue === value
-                  const canOpen = projectId === 2 || projectId === 3 || projectId === 1 || projectId === 4 // Forvia, SILMO, Dacia, and PRP can open
+                  const canOpen = true // All projects can open
                   
                   return (
-                    <div key={value}>
+                    <div key={value} data-banner-value={value}>
                       <div
                         onClick={() => canOpen && handleBannerClick(value, projectId)}
                         className={`relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm ${
@@ -419,14 +496,12 @@ export default function Home() {
                         {/* Images section when opened */}
                         {isOpen && project?.images && project.images.length > 0 && (
                           <div className="px-4 sm:px-6 md:px-8 pb-6 space-y-6">
-                            {/* Separator line for Forvia, SILMO, Dacia, and PRP */}
-                            {(projectId === 2 || projectId === 3 || projectId === 1 || projectId === 4) && (
-                              <div className="flex items-center justify-center max-w-3xl mx-auto pt-2">
-                                <div className="w-24 h-px bg-white/30"></div>
-                                <div className="mx-3 w-1 h-1 rounded-full bg-white/40"></div>
-                                <div className="w-24 h-px bg-white/30"></div>
-                              </div>
-                            )}
+                            {/* Separator line for all projects */}
+                            <div className="flex items-center justify-center max-w-3xl mx-auto pt-2">
+                              <div className="w-24 h-px bg-white/30"></div>
+                              <div className="mx-3 w-1 h-1 rounded-full bg-white/40"></div>
+                              <div className="w-24 h-px bg-white/30"></div>
+                            </div>
                             {/* Context text for Forvia before first image */}
                             {projectId === 2 && (
                               <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
@@ -442,7 +517,7 @@ export default function Home() {
                             )}
                             {/* Context text for Dacia before first image */}
                             {projectId === 1 && (
-                              <div className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto space-y-3">
+                              <div className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
                                 <p>
                                   The goal is to design the rest of the YouClip range to meet passengers' needs.
                                 </p>
@@ -454,7 +529,15 @@ export default function Home() {
                             {/* Context text for PRP before first image */}
                             {projectId === 4 && (
                               <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                In France, femicides keep rising with more than 130 cases a year while only 1 in 6 victims file a complaint. Built on emotional dependence and manipulative techniques like DARVO, this project explores how design can respond to this silent emergency.
+                                In France, femicides keep rising with over 130 cases a year, yet only 1 in 6 victims reports it.<br />
+                                Built on emotional dependence and manipulative techniques like DARVO,<br />
+                                this project explores how design can respond to this silent emergency.
+                              </p>
+                            )}
+                            {/* Context text for Renault before first image */}
+                            {projectId === 0 && (
+                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
+                                During my internship, I worked on accessories as well as Renault's Premium Family segment, which served as a guiding vision for my personal project.
                               </p>
                             )}
                             {project.images.map((imgSrc, idx) => (
@@ -475,7 +558,8 @@ export default function Home() {
                                     className="object-contain"
                                     quality={100}
                                     unoptimized={true}
-                                    priority={idx === 0}
+                                    priority={true}
+                                    loading="eager"
                                   />
                                   <div className="pointer-events-none absolute bottom-2 left-2">
                                     <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
@@ -486,20 +570,63 @@ export default function Home() {
                   </div>
                 ))}
                             {/* Video for Forvia */}
-                            {projectId === 2 && (
+                            {projectId === 2 && isOpen && (
                               <div 
                                 className="relative w-full max-w-3xl mx-auto"
                                 onClick={(e) => e.stopPropagation()}
                               >
-                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20 bg-white/10">
+                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20" style={{ minHeight: '400px', backgroundColor: 'transparent' }}>
                                   <video
                                     ref={videoRef}
                                     src="/images/forvia/FORVIA.VIDEO.mp4"
                                     loop
                                     muted
                                     playsInline
+                                    autoPlay
+                                    preload="auto"
+                                    width="1920"
+                                    height="1080"
                                     className="w-full h-full object-contain"
-                                  />
+                                    style={{ 
+                                      display: 'block',
+                                      width: '100%',
+                                      height: '100%',
+                                      minHeight: '400px',
+                                      backgroundColor: 'transparent',
+                                      opacity: 1,
+                                      visibility: 'visible',
+                                      zIndex: 1,
+                                      position: 'relative'
+                                    }}
+                                    onCanPlay={() => {
+                                      // Ensure video plays when it can
+                                      if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                        videoRef.current.play().catch(() => {})
+                                      }
+                                    }}
+                                    onPause={() => {
+                                      // Automatically resume if paused while banner is open
+                                      if (videoRef.current && openValue === 'Collaborate') {
+                                        videoRef.current.play().catch(() => {})
+                                      }
+                                    }}
+                                    onEnded={() => {
+                                      // Restart video when it ends (in case loop doesn't work)
+                                      if (videoRef.current && openValue === 'Collaborate') {
+                                        videoRef.current.currentTime = 0
+                                        videoRef.current.play().catch(() => {})
+                                      }
+                                    }}
+                                    onTimeUpdate={() => {
+                                      // Ensure video keeps playing if it somehow stops
+                                      if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                        videoRef.current.play().catch(() => {})
+                                      }
+                                    }}
+                                  >
+                                    <source src="/images/forvia/FORVIA.VIDEO.mp4" type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                  </video>
                                 </div>
                               </div>
                             )}
