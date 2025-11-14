@@ -27,7 +27,8 @@ const PROJECTS = [
       "/images/prp/PRP.011.jpeg",
       "/images/prp/PRP.012.jpeg",
       "/images/prp/PRP.013.jpeg",
-      "/images/prp/PRP.014.jpeg"
+      "/images/prp/PRP.014.jpeg",
+      "/images/prp/PRP.015.jpeg"
     ]  
   },
   {
