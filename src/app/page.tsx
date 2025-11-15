@@ -79,7 +79,9 @@ const PROJECTS = [
       "/images/renault/RENAULT.009.jpeg",
       "/images/renault/RENAULT.010.jpeg",
       "/images/renault/RENAULT.011.jpeg",
-      "/images/renault/RENAULT.012.jpeg"
+      "/images/renault/RENAULT.012.jpeg",
+      "/images/renault/RENAULT.013.jpeg",
+      "/images/renault/RENAULT.014.jpeg"
     ]
   }
 ]
