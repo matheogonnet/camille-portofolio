@@ -16,7 +16,7 @@
     "animejs": "latest",
     "clsx": "latest",
     "daisyui": "latest",
-    "next": "15.0.5",
+    "next": "15.0.7",
     "nodemailer": "^6.9.16",
     "react": "latest",
     "react-dom": "latest",
