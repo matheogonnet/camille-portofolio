@@ -662,7 +662,7 @@ export default function Home() {
                     <h3 className="text-xl tracking-wide uppercase text-gray-800 mb-8">Resume</h3>
                     <div className="flex items-center justify-center gap-4">
                       <a 
-                        href="/resume/CAMILLE_GRAND_CV_2026.pdf" 
+                        href="/resume/CAMILLE_GRAND_RESUME_2026.pdf" 
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label="View resume PDF"
@@ -671,7 +671,7 @@ export default function Home() {
                         <i className="bi bi-eye text-xl text-gray-900"></i>
                       </a>
                       <a 
-                        href="/resume/CAMILLE_GRAND_CV_2026.pdf" 
+                        href="/resume/CAMILLE_GRAND_RESUME_2026.pdf" 
                         download
                         aria-label="Download resume PDF"
                         className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white border border-gray-200 hover:bg-gray-50 transition-all duration-300"

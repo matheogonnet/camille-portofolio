@@ -19,8 +19,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Camille Grand - Transportation Designer',
-  description: 'Portfolio of Camille Grand, Transportation Designer at ISD Rubika',
+  title: 'Camille Grand - Industrial Designer',
+  description: 'Portfolio of Camille Grand, Industrial Designer at ISD Rubika',
   icons: {
     icon: [
       {
