@@ -615,7 +615,7 @@ export default function Home() {
                 </p>
                 <div className="space-y-3 text-gray-600">
                   {[
-                    'Petits Princes',
+                    'Association Petits Princes',
                     'Paris 2024 Olympic Games',
                     'Les Restos du Cœur',
                     'Mécénat Chirurgie Cardiaque',
@@ -699,7 +699,7 @@ export default function Home() {
                             />
                           </span>
                           <span
-                            className={`font-serif text-xs sm:text-sm md:text-base tracking-wide transition-colors duration-300 ${
+                            className={`font-serif text-lg sm:text-xl md:text-2xl tracking-wide transition-colors duration-300 ${
                               isDimmed ? 'text-gray-400' : 'text-gray-900'
                             }`}
                           >
@@ -707,7 +707,7 @@ export default function Home() {
                           </span>
                           <span
                             className={`text-[10px] sm:text-xs md:text-sm font-medium leading-tight px-0.5 transition-colors duration-300 ${
-                              isDimmed ? 'text-gray-400/80' : 'text-gray-600'
+                              isDimmed ? 'text-gray-400/55' : 'text-gray-400'
                             }`}
                           >
                             {subtitle}
