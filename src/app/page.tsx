@@ -6,7 +6,6 @@ import { useLayoutEffect, useState, useRef, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import FadeInSection from '@/components/FadeInSection'
 import Image from 'next/image'
-import ScrollArrow from '@/components/ScrollArrow'
 import ContactForm from '@/components/ContactForm'
 
 
@@ -86,14 +85,29 @@ const PROJECTS = [
   }
 ]
 
-// Mapping des valeurs aux projets
+// Mapping des valeurs aux projets (visuels cover : public/images/cover-picts/forme_01 … 05)
 const VALUE_PROJECTS = [
-  { value: 'Listen', color: '#c85a4a', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' }, // AUXI
-  { value: 'Collaborate', color: '#8b3d52', projectId: 2, subtitle: 'FORVIA Seating', description: 'CES 2024' }, // FORVIA
-  { value: 'Meet', color: '#c4b83a', projectId: 3, subtitle: 'SILMO', description: 'Optical Design Competition' }, // SILMO
-  { value: 'Understand', color: '#4a7d7a', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competition' }, // Kido/Dacia
-  { value: 'Empower', color: '#7db8c8', projectId: 0, subtitle: 'Renault', description: 'Renault Interlude' }, // Cyclauto
+  { value: 'Listen', coverImage: '/images/cover-picts/forme_01.png', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' },
+  { value: 'Collaborate', coverImage: '/images/cover-picts/forme_02.png', projectId: 2, subtitle: 'FORVIA Seating', description: 'CES 2024' },
+  { value: 'Meet', coverImage: '/images/cover-picts/forme_03.png', projectId: 3, subtitle: 'SILMO', description: 'Optical Design Competition' },
+  { value: 'Understand', coverImage: '/images/cover-picts/forme_04.png', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competition' },
+  { value: 'Empower', coverImage: '/images/cover-picts/forme_05.png', projectId: 0, subtitle: 'Renault', description: 'Renault Interlude' },
 ]
+
+// 7 orbs (same colors as project circles, some repeated for coverage)
+// wx / wy are fractions [0..1] of section W/H — closed loop (last = first)
+const HERO_ORBS = [
+  { color: '#f1dbb2', opacity: 0.72, wx: [0.05, 0.62, 0.88, 0.42, 0.10, 0.72, 0.05], wy: [0.05, 0.28, 0.72, 0.90, 0.58, 0.14, 0.05], d: 145000 },
+  { color: '#f3974a', opacity: 0.68, wx: [0.80, 0.18, 0.72, 0.04, 0.88, 0.44, 0.80], wy: [0.08, 0.52, 0.88, 0.32, 0.66, 0.04, 0.08], d: 120000 },
+  { color: '#fec96b', opacity: 0.70, wx: [0.42, 0.90, 0.14, 0.70, 0.28, 0.86, 0.42], wy: [0.50, 0.18, 0.82, 0.38, 0.92, 0.62, 0.50], d: 162000 },
+  { color: '#a8a264', opacity: 0.66, wx: [0.14, 0.76, 0.38, 0.92, 0.18, 0.56, 0.14], wy: [0.82, 0.14, 0.52, 0.88, 0.22, 0.70, 0.82], d: 128000 },
+  { color: '#7b876f', opacity: 0.64, wx: [0.66, 0.08, 0.82, 0.34, 0.76, 0.04, 0.66], wy: [0.72, 0.38, 0.08, 0.60, 0.92, 0.20, 0.72], d: 106000 },
+  { color: '#f3974a', opacity: 0.58, wx: [0.50, 0.86, 0.22, 0.60, 0.08, 0.76, 0.50], wy: [0.20, 0.62, 0.36, 0.82, 0.54, 0.04, 0.20], d: 152000 },
+  { color: '#fec96b', opacity: 0.56, wx: [0.28, 0.04, 0.72, 0.46, 0.96, 0.12, 0.28], wy: [0.34, 0.76, 0.56, 0.14, 0.42, 0.86, 0.34], d: 126000 },
+] as const
+
+// Without keyframes, anime 3 splits `d` evenly across path legs — first leg was ~d/6 (several seconds of barely visible drift).
+const HERO_ORB_FAST_LEG_RATIO = 0.05
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -107,6 +121,22 @@ export default function Home() {
   const [lastTouchDistance, setLastTouchDistance] = useState(0)
   const [lastTouchPosition, setLastTouchPosition] = useState({ x: 0, y: 0 })
   const videoRef = useRef<HTMLVideoElement>(null)
+  const heroSectionRef = useRef<HTMLElement>(null)
+  const heroOrbRefs = useRef<(HTMLDivElement | null)[]>([])
+  const heroOrbAnimeRef = useRef<ReturnType<typeof anime>[]>([])
+  const projectCirclesRowRef = useRef<HTMLDivElement>(null)
+  const projectPanelEndRef = useRef<HTMLDivElement>(null)
+  const [projectCloseVisible, setProjectCloseVisible] = useState(false)
+
+  const SCROLL_TO_CIRCLES_MS = 780
+
+  const handleCloseProjectPanel = () => {
+    const ROW = projectCirclesRowRef.current
+    if (ROW) {
+      ROW.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+    }
+    window.setTimeout(() => setOpenValue(null), SCROLL_TO_CIRCLES_MS)
+  }
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 2) {
@@ -193,7 +223,7 @@ export default function Home() {
     }
   }
 
-  const handleBannerClick = (value: string, projectId: number) => {
+  const handleBannerClick = (value: string) => {
     // Allow opening for all projects
     if (openValue === value) {
       setOpenValue(null)
@@ -295,7 +325,95 @@ export default function Home() {
   }, [openValue])
 
   useLayoutEffect(() => {
+    if (!openValue) {
+      setProjectCloseVisible(false)
+      return
+    }
+    const NODE = projectPanelEndRef.current
+    if (!NODE) return
+
+    setProjectCloseVisible(false)
+
+    const OBSERVER = new IntersectionObserver(
+      (entries) => {
+        const [ENTRY] = entries
+        if (ENTRY) setProjectCloseVisible(ENTRY.isIntersecting)
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
+    )
+    OBSERVER.observe(NODE)
+    return () => OBSERVER.disconnect()
+  }, [openValue])
+
+  useLayoutEffect(() => {
     setIsLoaded(true)
+
+    // Halos hero : en même temps que l’intro logo / texte (pas après isLoaded ni la fin du texte)
+    heroOrbAnimeRef.current.forEach((A) => {
+      try {
+        A.pause()
+      } catch {
+        /* ignore */
+      }
+    })
+    heroOrbAnimeRef.current = []
+
+    const SECTION = heroSectionRef.current
+    if (
+      SECTION &&
+      typeof window !== 'undefined' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      const W = Math.max(SECTION.clientWidth || 0, window.innerWidth || 0)
+      const H = Math.max(SECTION.clientHeight || 0, window.innerHeight || 0)
+      const ORB_PX = window.innerWidth < 640 ? 96 : window.innerWidth < 768 ? 112 : 128
+
+      if (W >= 2 && H >= 2) {
+        const INSTANCES: ReturnType<typeof anime>[] = []
+
+        HERO_ORBS.forEach((ORB, I) => {
+          const EL = heroOrbRefs.current[I]
+          if (!EL) return
+
+          const clampX = (f: number) => Math.round(Math.max(0, Math.min(f * W, W - ORB_PX)))
+          const clampY = (f: number) => Math.round(Math.max(0, Math.min(f * H, H - ORB_PX)))
+
+          EL.style.left = `${clampX(ORB.wx[0])}px`
+          EL.style.top = `${clampY(ORB.wy[0])}px`
+
+          const LEGS = ORB.wx.length - 1
+          const R_SLOW = (1 - 2 * HERO_ORB_FAST_LEG_RATIO) / (LEGS - 2)
+          const MS_FAST = Math.round(ORB.d * HERO_ORB_FAST_LEG_RATIO)
+          const MS_SLOW = Math.round(ORB.d * R_SLOW)
+          const SEG_MS = [
+            MS_FAST,
+            MS_FAST,
+            ...Array.from({ length: LEGS - 2 }, () => MS_SLOW),
+          ] as number[]
+          const DRIFT = ORB.d - SEG_MS.reduce((a, b) => a + b, 0)
+          SEG_MS[SEG_MS.length - 1] += DRIFT
+
+          const KEYFRAMES = Array.from({ length: LEGS }, (_, S) => ({
+            left: clampX(ORB.wx[S + 1]),
+            top: clampY(ORB.wy[S + 1]),
+            duration: SEG_MS[S],
+            easing: 'easeInOutQuad',
+          }))
+
+          INSTANCES.push(
+            anime({
+              targets: EL,
+              keyframes: KEYFRAMES,
+              delay: I * 40,
+              loop: true,
+              autoplay: true,
+            })
+          )
+        })
+
+        heroOrbAnimeRef.current = INSTANCES
+      }
+    }
 
     const timeline = anime.timeline({
       easing: 'easeOutExpo',
@@ -363,6 +481,17 @@ export default function Home() {
       delay: 1000,
       easing: 'easeInOutSine'
     })
+
+    return () => {
+      heroOrbAnimeRef.current.forEach((A) => {
+        try {
+          A.pause()
+        } catch {
+          /* ignore */
+        }
+      })
+      heroOrbAnimeRef.current = []
+    }
   }, [])
 
   return (
@@ -370,43 +499,83 @@ export default function Home() {
       <Navbar />
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section id="home" className="flex flex-col items-center justify-center h-screen p-8 relative overflow-hidden">
-          <div 
-            className="text-center space-y-12 relative"
+        <section
+          id="home"
+          ref={heroSectionRef}
+          className="relative flex h-screen min-h-screen flex-col overflow-hidden bg-gradient-to-b from-stone-50 via-neutral-50 to-white p-8"
+        >
+          {/* Orbs flottants - pilotes par anime.js */}
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+            {HERO_ORBS.map((ORB, I) => (
+              <div
+                key={`hero-orb-${I}`}
+                ref={(EL) => { heroOrbRefs.current[I] = EL }}
+                className="absolute"
+                style={{ width: 128, height: 128, left: 0, top: 0 }}
+              >
+                <div
+                  className="h-full w-full rounded-full"
+                  style={{
+                    backgroundColor: ORB.color,
+                    opacity: ORB.opacity,
+                    filter: 'blur(36px)',
+                    WebkitFilter: 'blur(36px)',
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Brume légère — pas de backdrop-blur plein écran (il supprimait les halos) */}
+          <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-white/28 to-white/55" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'radial-gradient(ellipse 85% 70% at 50% 45%, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 55%, rgba(252,251,250,0.7) 100%)',
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent" />
+          </div>
+
+          <div
+            className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-2"
             style={{
               transform: 'translateZ(0)',
-              willChange: 'transform'
+              willChange: 'transform',
             }}
           >
-            <div className="elegant-border px-12 py-16 border border-gray-200 rounded-lg shadow-sm bg-white/50 backdrop-blur-sm opacity-0">
-              <div className="flex flex-col items-center space-y-8 relative">
-                <div className="relative w-32 h-32">
-                  <div className="logo-shine absolute inset-0 bg-gradient-to-tr from-transparent via-white to-transparent opacity-0" />
-                  <Image
-                    src="/images/logo/cg_logo.png"
-                    alt="CG Logo"
-                    width={120}
-                    height={120}
-                    className="w-full h-full object-contain opacity-0 logo-animation transform-gpu"
-                    priority
-                  />
-                </div>
-                <div className="space-y-4">
-                  <h1 className="name-text block text-gray-900 text-6xl font-serif tracking-wide opacity-0">
-                    Camille Grand
-                  </h1>
-                  <p className="subtitle-text text-gray-600 text-xl opacity-0 tracking-widest uppercase">
-                    Industrial Designer
-                  </p>
+            <div className="relative space-y-12 text-center">
+              <div className="elegant-border rounded-lg border border-gray-200/90 bg-white/55 px-12 py-16 opacity-0 shadow-sm ring-1 ring-white/60 backdrop-blur-md">
+                <div className="relative flex flex-col items-center space-y-8">
+                  <div className="relative h-32 w-32">
+                    <div className="logo-shine absolute inset-0 bg-gradient-to-tr from-transparent via-white to-transparent opacity-0" />
+                    <Image
+                      src="/images/logo/cg_logo.png"
+                      alt="CG Logo"
+                      width={120}
+                      height={120}
+                      className="logo-animation h-full w-full transform-gpu object-contain opacity-0"
+                      priority
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h1 className="name-text block text-6xl font-serif tracking-wide text-gray-900 opacity-0">
+                      Camille Grand
+                    </h1>
+                    <p className="subtitle-text text-xl tracking-widest text-gray-600 opacity-0 uppercase">
+                      Industrial Designer
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <ScrollArrow />
         </section>
 
         {/* My Vision Section */}
-        <section id="about" className="py-28 px-8 bg-gray-50">
+        <section id="about" className="py-28 px-8 bg-[#fdfaf6]">
           <FadeInSection>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-4xl font-serif mb-16">My vision</h2>
@@ -433,11 +602,20 @@ export default function Home() {
                   This human approach is not limited to my professional projects.
                 </p>
                 <div className="space-y-3 text-gray-600">
-                  <p>Petits Princes</p>
-                  <p>Paris 2024 Olympic Games</p>
-                  <p>Les Restos du Cœur</p>
-                  <p>Mécénat Chirurgie Cardiaque</p>
-                  <p>Pour un Sourire d'Enfant</p>
+                  {[
+                    'Petits Princes',
+                    'Paris 2024 Olympic Games',
+                    'Les Restos du Cœur',
+                    'Mécénat Chirurgie Cardiaque',
+                    "Pour un Sourire d'Enfant",
+                  ].map((label) => (
+                    <p
+                      key={label}
+                      className="mx-auto max-w-lg cursor-default rounded-md px-3 py-2 transition-all duration-300 ease-out hover:translate-x-1 hover:text-gray-900"
+                    >
+                      {label}
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>
@@ -455,196 +633,269 @@ export default function Home() {
                 <span className="sm:hidden"> </span>Each shows a step in my path as a designer and how I create objects for people.
               </p>
               
-              <div className="space-y-1">
-                {VALUE_PROJECTS.map(({ value, color, subtitle, description, projectId }) => {
-                  const project = PROJECTS.find(p => p.id === projectId)
-                  const isOpen = openValue === value
-                  const canOpen = true // All projects can open
-                  
-                  return (
-                    <div key={value} data-banner-value={value}>
+              <div className="space-y-8">
+                <div
+                  ref={projectCirclesRowRef}
+                  className="grid scroll-mt-24 grid-cols-6 justify-items-center gap-x-3 gap-y-8 pb-2 max-w-md mx-auto sm:max-w-none sm:mx-0 sm:flex sm:flex-wrap sm:justify-center sm:gap-6 md:gap-8 lg:flex-nowrap lg:justify-center lg:gap-5 xl:gap-8"
+                >
+                  {VALUE_PROJECTS.map(({ value, coverImage, subtitle }, index) => {
+                    const isOpen = openValue === value
+                    const HAS_PANEL_OPEN = openValue !== null
+                    const isDimmed = HAS_PANEL_OPEN && !isOpen
+                    const MOBILE_CELL =
+                      index < 3
+                        ? 'col-span-2'
+                        : index === 3
+                          ? 'col-span-2 col-start-2'
+                          : 'col-span-2 col-start-4'
+
+                    return (
                       <div
-                        onClick={() => canOpen && handleBannerClick(value, projectId)}
-                        className={`relative w-full transition-all duration-[400ms] ease-in-out overflow-hidden shadow-sm ${
-                          canOpen ? 'cursor-pointer hover:shadow-md' : ''
-                        }`}
-                        style={{
-                          backgroundColor: color,
-                          minHeight: '120px',
-                          height: isOpen ? 'auto' : '120px',
-                        }}
+                        key={value}
+                        data-banner-value={value}
+                        className={`${MOBILE_CELL} w-full max-w-[150px] justify-self-center text-center sm:max-w-none sm:shrink-0 sm:col-auto sm:col-start-auto sm:w-[200px] md:w-auto md:min-w-0 lg:flex-1 lg:min-w-0 lg:max-w-[220px]`}
                       >
-                        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-5 sm:py-6 h-full">
-                          <h3 
-                            className="text-xl sm:text-2xl font-serif tracking-wide text-white"
+                        <button
+                          type="button"
+                          onClick={() => handleBannerClick(value)}
+                          className="w-full flex flex-col items-center gap-2 sm:gap-3 group cursor-pointer"
+                          aria-expanded={isOpen}
+                          aria-label={`${value} — ${subtitle}`}
+                        >
+                          <span
+                            className={`relative inline-block shrink-0 transition-all duration-300 ease-out w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 ${
+                              isOpen
+                                ? 'z-[1] scale-[1.14] sm:scale-[1.12] md:scale-[1.15]'
+                                : ''
+                            } ${
+                              !HAS_PANEL_OPEN
+                                ? 'group-hover:scale-110 group-hover:drop-shadow-md group-active:scale-105 sm:group-hover:scale-[1.11] md:group-hover:scale-[1.12]'
+                                : ''
+                            } ${
+                              isDimmed
+                                ? 'scale-95 opacity-45 saturate-[0.5] brightness-110 contrast-95'
+                                : ''
+                            }`}
+                          >
+                            <Image
+                              src={coverImage}
+                              alt={`${value} — ${subtitle}`}
+                              fill
+                              sizes="(max-width: 639px) 128px, (max-width: 767px) 160px, 192px"
+                              className="object-contain"
+                              priority={index < 3}
+                            />
+                          </span>
+                          <span
+                            className={`font-serif text-xs sm:text-sm md:text-base tracking-wide transition-colors duration-300 ${
+                              isDimmed ? 'text-gray-400' : 'text-gray-900'
+                            }`}
                           >
                             {value}
-                          </h3>
-                          <div className="flex items-center gap-2 sm:gap-4">
-                            <div className="text-right text-white">
-                              <div className="text-sm sm:text-base md:text-lg font-medium">{subtitle}</div>
-                              <div className="text-xs sm:text-sm opacity-90">{description}</div>
-                            </div>
-                            {canOpen && (
-                              <i 
-                                className={`bi bi-chevron-down text-white transition-transform duration-300 ${
-                                  isOpen ? 'rotate-180' : ''
-                                }`}
-                              />
-                            )}
-                          </div>
+                          </span>
+                          <span
+                            className={`text-[10px] sm:text-xs md:text-sm font-medium leading-tight px-0.5 transition-colors duration-300 ${
+                              isDimmed ? 'text-gray-400/80' : 'text-gray-600'
+                            }`}
+                          >
+                            {subtitle}
+                          </span>
+                          <i
+                            className={`bi bi-chevron-down text-xs sm:text-sm transition-all duration-300 ${
+                              isOpen ? 'rotate-180' : ''
+                            } ${isDimmed ? 'text-gray-400/50' : 'text-gray-600'}`}
+                          />
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {(() => {
+                  const ACTIVE = openValue
+                    ? VALUE_PROJECTS.find((v) => v.value === openValue)
+                    : null
+                  const project = ACTIVE ? PROJECTS.find((p) => p.id === ACTIVE.projectId) : null
+                  const projectId = ACTIVE?.projectId
+                  const subtitle = ACTIVE?.subtitle ?? ''
+                  const description = ACTIVE?.description ?? ''
+                  const PANEL_BG = '#f6f6f6'
+                  const PANEL_BODY = 'text-gray-900'
+                  const PANEL_RULE = 'bg-gray-300'
+                  const PANEL_DOT = 'bg-gray-500'
+                  const PANEL_IMG_BORDER = 'border-gray-200'
+                  const PANEL_IMG_BG = 'bg-white'
+
+                  if (!ACTIVE || !project?.images?.length) return null
+
+                  return (
+                    <div
+                      className="relative w-full overflow-hidden rounded-xl shadow-lg motion-reduce:animate-none animate-panel-reveal"
+                      style={{ backgroundColor: PANEL_BG }}
+                      data-open-project={ACTIVE.value}
+                    >
+                      <div className="px-4 sm:px-6 md:px-8 py-6 space-y-6">
+                        <div className="flex items-center justify-center max-w-3xl mx-auto pt-2">
+                          <div className={`w-24 h-px ${PANEL_RULE}`} />
+                          <div className={`mx-3 w-1 h-1 rounded-full ${PANEL_DOT}`} />
+                          <div className={`w-24 h-px ${PANEL_RULE}`} />
                         </div>
-                        
-                        {/* Images section when opened */}
-                        {isOpen && project?.images && project.images.length > 0 && (
-                          <div className="px-4 sm:px-6 md:px-8 pb-6 space-y-6">
-                            {/* Separator line for all projects */}
-                            <div className="flex items-center justify-center max-w-3xl mx-auto pt-2">
-                              <div className="w-24 h-px bg-white/30"></div>
-                              <div className="mx-3 w-1 h-1 rounded-full bg-white/40"></div>
-                              <div className="w-24 h-px bg-white/30"></div>
-                            </div>
-                            {/* Context text for Forvia before first image */}
-                            {projectId === 2 && (
-                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                The CES in Las Vegas is one of the biggest tech shows in the world,<br />
-                                where Forvia showcases its innovations every two years.
-                              </p>
-                            )}
-                            {/* Context text for SILMO before first image */}
-                            {projectId === 3 && (
-                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                What attracted me most to this competition was the freedom: glasses allow any designer, whatever their specialty, to create emotion and meaning for the user.
-                              </p>
-                            )}
-                            {/* Context text for Dacia before first image */}
-                            {projectId === 1 && (
-                              <div className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                <p>
-                                  The goal is to design the rest of the YouClip range to meet passengers' needs.
-                                </p>
-                                <p>
-                                  YouClip is Dacia's flexible system for personalizing your car interior.
-                                </p>
-                              </div>
-                            )}
-                            {/* Context text for PRP before first image */}
-                            {projectId === 4 && (
-                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                In France, femicides keep rising with over 130 cases a year, yet only 1 in 6 victims reports it.<br />
-                                Built on emotional dependence and manipulative techniques like DARVO,<br />
-                                this project explores how design can respond to this silent emergency.
-                              </p>
-                            )}
-                            {/* Context text for Renault before first image */}
-                            {projectId === 0 && (
-                              <p className="text-white text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto">
-                                During my internship, I worked on accessories as well as Renault's Premium Family segment, which served as a guiding vision for my personal project.
-                              </p>
-                            )}
-                            {project.images.map((imgSrc, idx) => (
-                              <div 
-                                key={idx} 
-                                className="relative w-full max-w-3xl mx-auto cursor-pointer"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleImageClick(project.images || [], idx)
-                                }}
-                              >
-                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20 bg-white/10">
-                                  <Image
-                                    src={imgSrc}
-                                    alt={`${subtitle} ${description} - Image ${idx + 1}`}
-                                    fill
-                                    sizes="100vw"
-                                    className="object-contain"
-                                    quality={100}
-                                    unoptimized={true}
-                                    priority={true}
-                                    loading="eager"
-                                  />
-                                  <div className="pointer-events-none absolute bottom-2 left-2">
-                                    <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
-                                      <i className="bi bi-zoom-in text-xs"></i>
-                                    </div>
-                                  </div>
-                                </div>
-                  </div>
-                ))}
-                            {/* Video for Forvia */}
-                            {projectId === 2 && isOpen && (
-                              <div 
-                                className="relative w-full max-w-3xl mx-auto"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <div className="relative w-full aspect-video overflow-hidden rounded-lg border border-white/20" style={{ minHeight: '400px', backgroundColor: 'transparent' }}>
-                                  <video
-                                    ref={videoRef}
-                                    src="/images/forvia/FORVIA.VIDEO.mp4"
-                                    loop
-                                    muted
-                                    playsInline
-                                    autoPlay
-                                    preload="auto"
-                                    width="1920"
-                                    height="1080"
-                                    className="w-full h-full object-contain"
-                                    style={{ 
-                                      display: 'block',
-                                      width: '100%',
-                                      height: '100%',
-                                      minHeight: '400px',
-                                      backgroundColor: 'transparent',
-                                      opacity: 1,
-                                      visibility: 'visible',
-                                      zIndex: 1,
-                                      position: 'relative'
-                                    }}
-                                    onCanPlay={() => {
-                                      // Ensure video plays when it can
-                                      if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
-                                        videoRef.current.play().catch(() => {})
-                                      }
-                                    }}
-                                    onPause={() => {
-                                      // Automatically resume if paused while banner is open
-                                      if (videoRef.current && openValue === 'Collaborate') {
-                                        videoRef.current.play().catch(() => {})
-                                      }
-                                    }}
-                                    onEnded={() => {
-                                      // Restart video when it ends (in case loop doesn't work)
-                                      if (videoRef.current && openValue === 'Collaborate') {
-                                        videoRef.current.currentTime = 0
-                                        videoRef.current.play().catch(() => {})
-                                      }
-                                    }}
-                                    onTimeUpdate={() => {
-                                      // Ensure video keeps playing if it somehow stops
-                                      if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
-                                        videoRef.current.play().catch(() => {})
-                                      }
-                                    }}
-                                  >
-                                    <source src="/images/forvia/FORVIA.VIDEO.mp4" type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                  </video>
-                                </div>
-                              </div>
-                            )}
+
+                        {projectId === 2 && (
+                          <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto`}>
+                            The CES in Las Vegas is one of the biggest tech shows in the world,<br />
+                            where Forvia showcases its innovations every two years.
+                          </p>
+                        )}
+                        {projectId === 3 && (
+                          <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto`}>
+                            What attracted me most to this competition was the freedom: glasses allow any designer, whatever their specialty, to create emotion and meaning for the user.
+                          </p>
+                        )}
+                        {projectId === 1 && (
+                          <div className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto`}>
+                            <p>
+                              The goal is to design the rest of the YouClip range to meet passengers' needs.
+                            </p>
+                            <p>
+                              YouClip is Dacia's flexible system for personalizing your car interior.
+                            </p>
                           </div>
                         )}
+                        {projectId === 4 && (
+                          <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto`}>
+                            In France, femicides keep rising with over 130 cases a year, yet only 1 in 6 victims reports it.<br />
+                            Built on emotional dependence and manipulative techniques like DARVO,<br />
+                            this project explores how design can respond to this silent emergency.
+                          </p>
+                        )}
+                        {projectId === 0 && (
+                          <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto`}>
+                            During my internship, I worked on accessories as well as Renault's Premium Family segment, which served as a guiding vision for my personal project.
+                          </p>
+                        )}
+
+                        {project.images.map((imgSrc, idx) => (
+                          <div
+                            key={idx}
+                            className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleImageClick(project.images || [], idx)
+                            }}
+                          >
+                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                              <Image
+                                src={imgSrc}
+                                alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                fill
+                                sizes="100vw"
+                                className="object-contain"
+                                quality={100}
+                                unoptimized={true}
+                                priority={true}
+                                loading="eager"
+                              />
+                              <div className="pointer-events-none absolute bottom-2 left-2">
+                                <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                  <i className="bi bi-zoom-in text-xs"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+
+                        {projectId === 2 && (
+                          <div
+                            className="relative w-full max-w-3xl mx-auto"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`} style={{ minHeight: '400px', backgroundColor: 'transparent' }}>
+                              <video
+                                ref={videoRef}
+                                src="/images/forvia/FORVIA.VIDEO.mp4"
+                                loop
+                                muted
+                                playsInline
+                                autoPlay
+                                preload="auto"
+                                width="1920"
+                                height="1080"
+                                className="w-full h-full object-contain"
+                                style={{
+                                  display: 'block',
+                                  width: '100%',
+                                  height: '100%',
+                                  minHeight: '400px',
+                                  backgroundColor: 'transparent',
+                                  opacity: 1,
+                                  visibility: 'visible',
+                                  zIndex: 1,
+                                  position: 'relative'
+                                }}
+                                onCanPlay={() => {
+                                  if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                    videoRef.current.play().catch(() => {})
+                                  }
+                                }}
+                                onPause={() => {
+                                  if (videoRef.current && openValue === 'Collaborate') {
+                                    videoRef.current.play().catch(() => {})
+                                  }
+                                }}
+                                onEnded={() => {
+                                  if (videoRef.current && openValue === 'Collaborate') {
+                                    videoRef.current.currentTime = 0
+                                    videoRef.current.play().catch(() => {})
+                                  }
+                                }}
+                                onTimeUpdate={() => {
+                                  if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                    videoRef.current.play().catch(() => {})
+                                  }
+                                }}
+                              >
+                                <source src="/images/forvia/FORVIA.VIDEO.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            </div>
+                          </div>
+                        )}
+
+                        <div
+                          ref={projectPanelEndRef}
+                          className="pt-8 pb-2 flex flex-col items-center gap-5 scroll-mt-8"
+                        >
+                          <div className={`w-10 h-px ${PANEL_RULE}`} />
+                          <button
+                            type="button"
+                            tabIndex={projectCloseVisible ? 0 : -1}
+                            aria-hidden={!projectCloseVisible}
+                            aria-label="Back to projects"
+                            onClick={handleCloseProjectPanel}
+                            className={`group relative flex h-12 w-12 items-center justify-center rounded-full border border-gray-200/90 bg-white/90 text-gray-600 shadow-sm backdrop-blur-sm transition-all duration-500 ease-out hover:border-gray-300 hover:bg-white hover:text-gray-900 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-400 motion-safe:hover:-translate-y-0.5 ${
+                              projectCloseVisible
+                                ? 'opacity-100 translate-y-0'
+                                : 'opacity-0 translate-y-3 pointer-events-none'
+                            }`}
+                          >
+                            <i
+                              className="bi bi-chevron-up text-lg transition-transform duration-500 ease-out group-hover:-translate-y-1"
+                              aria-hidden
+                            />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )
-                })}
+                })()}
               </div>
             </div>
           </FadeInSection>
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 px-8 bg-gray-50">
+        <section id="contact" className="py-20 px-8 bg-[#fdfaf6]">
           <FadeInSection>
             <div className="max-w-6xl mx-auto text-center">
               <h2 className="text-4xl font-serif mb-6">Contact</h2>
@@ -755,20 +1006,18 @@ export default function Home() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  <img
-                    src={viewerImages[viewerIndex]}
-                    alt={`Image ${viewerIndex + 1}`}
-                    className="max-w-full max-h-full w-auto h-auto object-contain"
-                    draggable={false}
-                    style={{
-                      imageRendering: 'auto',
-                      willChange: 'transform',
-                      backfaceVisibility: 'hidden',
-                      WebkitBackfaceVisibility: 'hidden',
-                      WebkitTransform: 'translateZ(0)',
-                      transform: 'translateZ(0)'
-                    }}
-                  />
+                  <div className="relative h-full w-full">
+                    <Image
+                      key={viewerImages[viewerIndex]}
+                      src={viewerImages[viewerIndex]}
+                      alt={`Image ${viewerIndex + 1}`}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, min(100vw, 72rem)"
+                      draggable={false}
+                      priority={viewerIndex === 0}
+                    />
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsViewerOpen(false)}

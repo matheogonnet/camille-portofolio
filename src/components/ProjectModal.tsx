@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { Dialog } from '@headlessui/react'
-import { cn } from '@/lib/utils'
 import ImageZoom from './ImageZoom'
 import { useState } from 'react'
 import Image from 'next/image'
@@ -30,7 +29,6 @@ interface ProjectModalProps {
 }
 
 export default function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
-  const [, setCurrentImageIndex] = useState(0)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
   const [viewerIndex, setViewerIndex] = useState(0)
   const [scale, setScale] = useState(1)
@@ -241,20 +239,18 @@ export default function ProjectModal({ isOpen, onClose, project }: ProjectModalP
                   WebkitBackfaceVisibility: 'hidden'
                 }}
               >
-                <img
-                  src={project.images[viewerIndex]}
-                  alt={`${project.title} image ${viewerIndex + 1}`}
-                  className="max-w-full max-h-full w-auto h-auto object-contain"
-                  draggable={false}
-                  style={{
-                    imageRendering: 'auto',
-                    willChange: 'transform',
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    WebkitTransform: 'translateZ(0)',
-                    transform: 'translateZ(0)'
-                  }}
-                />
+                <div className="relative h-full w-full">
+                  <Image
+                    key={project.images[viewerIndex]}
+                    src={project.images[viewerIndex]}
+                    alt={`${project.title} image ${viewerIndex + 1}`}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 100vw, min(100vw, 72rem)"
+                    draggable={false}
+                    priority={viewerIndex === 0}
+                  />
+                </div>
               </div>
               <button
                 onClick={() => setIsViewerOpen(false)}

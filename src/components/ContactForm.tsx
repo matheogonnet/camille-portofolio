@@ -156,13 +156,14 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="submit-button group relative inline-flex items-center justify-center gap-3 px-10 py-3 bg-gray-900 hover:bg-gray-800 rounded-xl transition-all duration-300 disabled:opacity-70"
+          className="submit-button relative inline-flex items-center justify-center px-10 py-3 bg-gray-900 hover:bg-gray-800 rounded-xl transition-all duration-300 disabled:opacity-70"
         >
-          <span className={`font-serif text-lg text-white flex items-center gap-3 ${
-            isSubmitting ? 'opacity-0' : 'opacity-100'
-          } transition-opacity duration-200`}>
-            Send Message
-            <i className="bi bi-send text-lg group-hover:translate-x-1 transition-transform duration-200"></i>
+          <span
+            className={`font-serif text-lg text-white ${
+              isSubmitting ? 'opacity-0' : 'opacity-100'
+            } transition-opacity duration-200`}
+          >
+            Send
           </span>
           {isSubmitting && (
             <div className="absolute inset-0 flex items-center justify-center">
