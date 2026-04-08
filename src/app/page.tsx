@@ -109,6 +109,21 @@ const HERO_ORBS = [
 // Without keyframes, anime 3 splits `d` evenly across path legs — first leg was ~d/6 (several seconds of barely visible drift).
 const HERO_ORB_FAST_LEG_RATIO = 0.05
 
+/** Soft halo without `filter: blur()` — integrated/mobile GPUs often composite blur as a rectangle when the layer moves. */
+function parseHexRgb(hex: string): { r: number; g: number; b: number } {
+  const h = hex.replace('#', '').trim()
+  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h
+  const n = parseInt(full, 16)
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
+}
+
+function heroOrbRadialBackground(hex: string, orbOpacity: number): string {
+  const { r, g, b } = parseHexRgb(hex)
+  const a = (t: number) => Math.min(1, orbOpacity * t)
+  const rgba = (t: number) => `rgba(${r},${g},${b},${a(t).toFixed(3)})`
+  return `radial-gradient(circle, ${rgba(0.98)} 0%, ${rgba(0.52)} 30%, ${rgba(0.18)} 52%, ${rgba(0)} 71%)`
+}
+
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [openValue, setOpenValue] = useState<string | null>(null)
@@ -516,10 +531,7 @@ export default function Home() {
                 <div
                   className="h-full w-full rounded-full"
                   style={{
-                    backgroundColor: ORB.color,
-                    opacity: ORB.opacity,
-                    filter: 'blur(36px)',
-                    WebkitFilter: 'blur(36px)',
+                    background: heroOrbRadialBackground(ORB.color, ORB.opacity),
                   }}
                 />
               </div>
