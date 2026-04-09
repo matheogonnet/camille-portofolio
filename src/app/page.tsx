@@ -13,22 +13,15 @@ const PROJECTS = [
   {
     id: 4,
     images: [
-      "/images/prp/PRP.001.jpeg",
-      "/images/prp/PRP.002.jpeg",
-      "/images/prp/PRP.003.jpeg",
-      "/images/prp/PRP.004.jpeg",
-      "/images/prp/PRP.005.jpeg",
-      "/images/prp/PRP.006.jpeg",
-      "/images/prp/PRP.007.jpeg",
-      "/images/prp/PRP.008.jpeg",
-      "/images/prp/PRP.009.jpeg",
-      "/images/prp/PRP.010.jpeg",
-      "/images/prp/PRP.011.jpeg",
-      "/images/prp/PRP.012.jpeg",
-      "/images/prp/PRP.013.jpeg",
-      "/images/prp/PRP.014.jpeg",
-      "/images/prp/PRP.015.jpeg"
-    ]  
+      '/images/prp/AUXI.001.jpeg',
+      '/images/prp/AUXI.002.jpeg',
+      '/images/prp/AUXI.003.jpeg',
+      '/images/prp/AUXI.004.jpeg',
+      '/images/prp/AUXI.005.jpeg',
+      '/images/prp/AUXI.006.jpeg',
+      '/images/prp/AUXI.007.jpeg',
+      '/images/prp/AUXI.009.jpeg',
+    ],
   },
   {
     id: 3,
@@ -85,6 +78,7 @@ const PROJECTS = [
 
 // Mapping des valeurs aux projets (visuels cover : public/images/cover-picts/forme_01 … 05)
 const SILMO_VIDEO_SRC = '/images/silmo/SILMO.003.MOV'
+const AUXI_VIDEO_SRC = '/images/prp/AUXI.008.mov'
 
 const VALUE_PROJECTS = [
   { value: 'Listen', coverImage: '/images/cover-picts/forme_01.png', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' },
@@ -137,6 +131,7 @@ export default function Home() {
   const [lastTouchPosition, setLastTouchPosition] = useState({ x: 0, y: 0 })
   const videoRef = useRef<HTMLVideoElement>(null)
   const silmoVideoRef = useRef<HTMLVideoElement>(null)
+  const prpVideoRef = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
   const heroOrbRefs = useRef<(HTMLDivElement | null)[]>([])
   const heroOrbAnimeRef = useRef<ReturnType<typeof anime>[]>([])
@@ -287,18 +282,20 @@ export default function Home() {
 
     const forviaPreload = preloadVideo('/images/forvia/FORVIA.VIDEO.mp4')
     const silmoPreload = preloadVideo(SILMO_VIDEO_SRC)
+    const auxiPreload = preloadVideo(AUXI_VIDEO_SRC)
 
     return () => {
-      for (const v of [forviaPreload, silmoPreload]) {
+      for (const v of [forviaPreload, silmoPreload, auxiPreload]) {
         if (v.parentNode) v.parentNode.removeChild(v)
       }
     }
   }, [])
 
-  // Forvia + SILMO panel videos: play in loop while open (same pattern)
+  // Forvia + SILMO + PRP (AUXI) panel videos: loop while section open
   useEffect(() => {
     const isForviaOpen = openValue === 'Collaborate'
     const isSilmoOpen = openValue === 'Meet'
+    const isListenOpen = openValue === 'Listen'
 
     const attachPanelVideo = (
       ref: React.RefObject<HTMLVideoElement | null>,
@@ -340,12 +337,15 @@ export default function Home() {
 
     const cleanForvia = attachPanelVideo(videoRef, isForviaOpen)
     const cleanSilmo = attachPanelVideo(silmoVideoRef, isSilmoOpen)
+    const cleanPrp = attachPanelVideo(prpVideoRef, isListenOpen)
 
     return () => {
       cleanForvia()
       cleanSilmo()
+      cleanPrp()
       videoRef.current?.pause()
       silmoVideoRef.current?.pause()
+      prpVideoRef.current?.pause()
     }
   }, [openValue])
 
@@ -797,7 +797,130 @@ export default function Home() {
                           </p>
                         )}
 
-                        {projectId === 3 && project.images ? (
+                        {projectId === 4 && project.images && project.images.length === 8 ? (
+                          <>
+                            {project.images.slice(0, 7).map((imgSrc, idx) => (
+                              <div
+                                key={idx}
+                                className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleImageClick(project.images || [], idx)
+                                }}
+                              >
+                                <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                  <Image
+                                    src={imgSrc}
+                                    alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                    fill
+                                    sizes="100vw"
+                                    className="object-contain"
+                                    quality={100}
+                                    unoptimized
+                                    priority={idx < 3}
+                                    loading="eager"
+                                  />
+                                  <div className="pointer-events-none absolute bottom-2 left-2">
+                                    <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                      <i className="bi bi-zoom-in text-xs"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            <div
+                              className="relative w-full max-w-3xl mx-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`}
+                                style={{ minHeight: '400px', backgroundColor: 'transparent' }}
+                              >
+                                <video
+                                  ref={prpVideoRef}
+                                  src={AUXI_VIDEO_SRC}
+                                  loop
+                                  muted
+                                  playsInline
+                                  autoPlay
+                                  preload="auto"
+                                  width="1920"
+                                  height="1080"
+                                  className="h-full w-full object-contain"
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    height: '100%',
+                                    minHeight: '400px',
+                                    backgroundColor: 'transparent',
+                                    opacity: 1,
+                                    visibility: 'visible',
+                                    zIndex: 1,
+                                    position: 'relative',
+                                  }}
+                                  onCanPlay={() => {
+                                    if (
+                                      prpVideoRef.current &&
+                                      openValue === 'Listen' &&
+                                      prpVideoRef.current.paused
+                                    ) {
+                                      prpVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onPause={() => {
+                                    if (prpVideoRef.current && openValue === 'Listen') {
+                                      prpVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onEnded={() => {
+                                    if (prpVideoRef.current && openValue === 'Listen') {
+                                      prpVideoRef.current.currentTime = 0
+                                      prpVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onTimeUpdate={() => {
+                                    if (
+                                      prpVideoRef.current &&
+                                      openValue === 'Listen' &&
+                                      prpVideoRef.current.paused
+                                    ) {
+                                      prpVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                >
+                                  <source src={AUXI_VIDEO_SRC} type="video/quicktime" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            </div>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 7)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[7]}
+                                  alt={`${subtitle} ${description} - Image 9`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized
+                                  priority={false}
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : projectId === 3 && project.images ? (
                           <>
                             <div
                               className="relative w-full max-w-3xl mx-auto cursor-pointer"
