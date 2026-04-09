@@ -33,12 +33,10 @@ const PROJECTS = [
   {
     id: 3,
     images: [
-      "/images/silmo/SILMO.001.jpeg",
-      "/images/silmo/SILMO.002.jpeg",
-      "/images/silmo/SILMO.003.jpeg",
-      "/images/silmo/SILMO.004.jpeg",
-      "/images/silmo/SILMO.005.jpeg"
-    ]  
+      '/images/silmo/SILMO.001.jpeg',
+      '/images/silmo/SILMO.002.jpeg',
+      '/images/silmo/SILMO.004.jpeg',
+    ],
   },
   {
     id: 2,
@@ -86,6 +84,8 @@ const PROJECTS = [
 ]
 
 // Mapping des valeurs aux projets (visuels cover : public/images/cover-picts/forme_01 … 05)
+const SILMO_VIDEO_SRC = '/images/silmo/SILMO.003.MOV'
+
 const VALUE_PROJECTS = [
   { value: 'Listen', coverImage: '/images/cover-picts/forme_01.png', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' },
   { value: 'Collaborate', coverImage: '/images/cover-picts/forme_02.png', projectId: 2, subtitle: 'FORVIA Seating', description: 'CES 2024' },
@@ -136,6 +136,7 @@ export default function Home() {
   const [lastTouchDistance, setLastTouchDistance] = useState(0)
   const [lastTouchPosition, setLastTouchPosition] = useState({ x: 0, y: 0 })
   const videoRef = useRef<HTMLVideoElement>(null)
+  const silmoVideoRef = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
   const heroOrbRefs = useRef<(HTMLDivElement | null)[]>([])
   const heroOrbAnimeRef = useRef<ReturnType<typeof anime>[]>([])
@@ -273,69 +274,78 @@ export default function Home() {
       img.src = imageUrl
     })
     
-    // Preload video
-    const video = document.createElement('video')
-    video.src = '/images/forvia/FORVIA.VIDEO.mp4'
-    video.preload = 'auto'
-    video.muted = true
-    video.playsInline = true
-    // Keep video element in memory for faster access
-    document.body.appendChild(video)
-    video.style.display = 'none'
-    
+    const preloadVideo = (src: string) => {
+      const v = document.createElement('video')
+      v.src = src
+      v.preload = 'auto'
+      v.muted = true
+      v.playsInline = true
+      v.style.display = 'none'
+      document.body.appendChild(v)
+      return v
+    }
+
+    const forviaPreload = preloadVideo('/images/forvia/FORVIA.VIDEO.mp4')
+    const silmoPreload = preloadVideo(SILMO_VIDEO_SRC)
+
     return () => {
-      // Cleanup: remove hidden video element
-      if (video.parentNode) {
-        video.parentNode.removeChild(video)
+      for (const v of [forviaPreload, silmoPreload]) {
+        if (v.parentNode) v.parentNode.removeChild(v)
       }
     }
   }, [])
 
-  // Control video play/pause based on banner open state
+  // Forvia + SILMO panel videos: play in loop while open (same pattern)
   useEffect(() => {
     const isForviaOpen = openValue === 'Collaborate'
-    if (isForviaOpen) {
-      // Wait longer after scroll to ensure video is mounted and visible
+    const isSilmoOpen = openValue === 'Meet'
+
+    const attachPanelVideo = (
+      ref: React.RefObject<HTMLVideoElement | null>,
+      active: boolean
+    ) => {
+      if (!active) {
+        ref.current?.pause()
+        return () => {}
+      }
       const timeoutId = setTimeout(() => {
-        if (videoRef.current) {
-          const video = videoRef.current
-          // Try to play the video
-          const tryPlay = () => {
-            if (video && !video.paused) return // Already playing
-            video.play().catch(() => {
-              // Ignore errors silently
-            })
-          }
-          
-          // If video is ready, play immediately
-          if (video.readyState >= 2) {
+        const video = ref.current
+        if (!video) return
+        const tryPlay = () => {
+          if (!video.paused) return
+          video.play().catch(() => {})
+        }
+        if (video.readyState >= 2) {
+          tryPlay()
+        } else {
+          const handleCanPlay = () => {
             tryPlay()
-          } else {
-            // Otherwise wait for it to load
-            const handleCanPlay = () => {
-              tryPlay()
-              video.removeEventListener('canplay', handleCanPlay)
-            }
-            video.addEventListener('canplay', handleCanPlay)
+            video.removeEventListener('canplay', handleCanPlay)
           }
+          video.addEventListener('canplay', handleCanPlay)
         }
-      }, 500) // Increased delay to account for scroll animation
-      
-      // Monitor video to ensure it keeps playing
+      }, 500)
+
       const checkInterval = setInterval(() => {
-        if (videoRef.current && isForviaOpen && videoRef.current.paused) {
-          videoRef.current.play().catch(() => {})
+        if (ref.current && active && ref.current.paused) {
+          ref.current.play().catch(() => {})
         }
-      }, 1000) // Check every second
-      
+      }, 1000)
+
       return () => {
         clearTimeout(timeoutId)
         clearInterval(checkInterval)
       }
-    } else {
-      if (videoRef.current) {
-        videoRef.current.pause()
-      }
+    }
+
+    const cleanForvia = attachPanelVideo(videoRef, isForviaOpen)
+    const cleanSilmo = attachPanelVideo(silmoVideoRef, isSilmoOpen)
+
+    return () => {
+      cleanForvia()
+      cleanSilmo()
+      videoRef.current?.pause()
+      silmoVideoRef.current?.pause()
     }
   }, [openValue])
 
@@ -787,35 +797,189 @@ export default function Home() {
                           </p>
                         )}
 
-                        {project.images.map((imgSrc, idx) => (
-                          <div
-                            key={idx}
-                            className="relative w-full max-w-3xl mx-auto cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleImageClick(project.images || [], idx)
-                            }}
-                          >
-                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
-                              <Image
-                                src={imgSrc}
-                                alt={`${subtitle} ${description} - Image ${idx + 1}`}
-                                fill
-                                sizes="100vw"
-                                className="object-contain"
-                                quality={100}
-                                unoptimized={true}
-                                priority={true}
-                                loading="eager"
-                              />
-                              <div className="pointer-events-none absolute bottom-2 left-2">
-                                <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
-                                  <i className="bi bi-zoom-in text-xs"></i>
+                        {projectId === 3 && project.images ? (
+                          <>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 0)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[0]}
+                                  alt={`${subtitle} ${description} - Image 1`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized
+                                  priority
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 1)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[1]}
+                                  alt={`${subtitle} ${description} - Image 2`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized
+                                  priority
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`}
+                                style={{ minHeight: '400px', backgroundColor: 'transparent' }}
+                              >
+                                <video
+                                  ref={silmoVideoRef}
+                                  src={SILMO_VIDEO_SRC}
+                                  loop
+                                  muted
+                                  playsInline
+                                  autoPlay
+                                  preload="auto"
+                                  width="1920"
+                                  height="1080"
+                                  className="h-full w-full object-contain"
+                                  style={{
+                                    display: 'block',
+                                    width: '100%',
+                                    height: '100%',
+                                    minHeight: '400px',
+                                    backgroundColor: 'transparent',
+                                    opacity: 1,
+                                    visibility: 'visible',
+                                    zIndex: 1,
+                                    position: 'relative',
+                                  }}
+                                  onCanPlay={() => {
+                                    if (
+                                      silmoVideoRef.current &&
+                                      openValue === 'Meet' &&
+                                      silmoVideoRef.current.paused
+                                    ) {
+                                      silmoVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onPause={() => {
+                                    if (silmoVideoRef.current && openValue === 'Meet') {
+                                      silmoVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onEnded={() => {
+                                    if (silmoVideoRef.current && openValue === 'Meet') {
+                                      silmoVideoRef.current.currentTime = 0
+                                      silmoVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onTimeUpdate={() => {
+                                    if (
+                                      silmoVideoRef.current &&
+                                      openValue === 'Meet' &&
+                                      silmoVideoRef.current.paused
+                                    ) {
+                                      silmoVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                >
+                                  <source src={SILMO_VIDEO_SRC} type="video/quicktime" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            </div>
+                            {project.images.slice(2).map((imgSrc, sliceIdx) => {
+                              const idx = sliceIdx + 2
+                              return (
+                                <div
+                                  key={idx}
+                                  className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleImageClick(project.images || [], idx)
+                                  }}
+                                >
+                                  <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                    <Image
+                                      src={imgSrc}
+                                      alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                      fill
+                                      sizes="100vw"
+                                      className="object-contain"
+                                      quality={100}
+                                      unoptimized
+                                      priority
+                                      loading="eager"
+                                    />
+                                    <div className="pointer-events-none absolute bottom-2 left-2">
+                                      <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                        <i className="bi bi-zoom-in text-xs"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </>
+                        ) : (
+                          project.images.map((imgSrc, idx) => (
+                            <div
+                              key={idx}
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], idx)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={imgSrc}
+                                  alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized={true}
+                                  priority={true}
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        )}
 
                         {projectId === 2 && (
                           <div
