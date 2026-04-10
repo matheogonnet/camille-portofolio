@@ -54,27 +54,20 @@ const PROJECTS = [
   {
     id: 0,
     images: [
-      "/images/renault/RENAULT.001.jpeg",
-      "/images/renault/RENAULT.002.jpeg",
-      "/images/renault/RENAULT.003.jpeg",
-      "/images/renault/RENAULT.004.jpeg",
-      "/images/renault/RENAULT.005.jpeg",
-      "/images/renault/RENAULT.006.jpeg",
-      "/images/renault/RENAULT.007.jpeg",
-      "/images/renault/RENAULT.008.jpeg",
-      "/images/renault/RENAULT.009.jpeg",
-      "/images/renault/RENAULT.010.jpeg",
-      "/images/renault/RENAULT.011.jpeg",
-      "/images/renault/RENAULT.012.jpeg",
-      "/images/renault/RENAULT.013.jpeg",
-      "/images/renault/RENAULT.014.jpeg"
-    ]
-  }
+      '/images/renault/RENAULT.001.jpeg',
+      '/images/renault/RENAULT.002.jpeg',
+      '/images/renault/RENAULT.004.jpeg',
+      '/images/renault/RENAULT.005.jpeg',
+      '/images/renault/RENAULT.006.jpeg',
+      '/images/renault/RENAULT.007.jpeg',
+    ],
+  },
 ]
 
 // Mapping des valeurs aux projets (visuels cover : public/images/cover-picts/forme_01 … 05)
 const SILMO_VIDEO_SRC = '/images/silmo/SILMO.003.MOV'
 const AUXI_VIDEO_SRC = '/images/prp/AUXI.008.mov'
+const RENAULT_VIDEO_SRC = '/images/renault/RENAULT.003.mov'
 
 const VALUE_PROJECTS = [
   { value: 'Listen', coverImage: '/images/cover-picts/forme_01.png', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' },
@@ -128,6 +121,7 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const silmoVideoRef = useRef<HTMLVideoElement>(null)
   const prpVideoRef = useRef<HTMLVideoElement>(null)
+  const renaultVideoRef = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
   const heroOrbRefs = useRef<(HTMLDivElement | null)[]>([])
   const heroOrbAnimeRef = useRef<ReturnType<typeof anime>[]>([])
@@ -279,19 +273,21 @@ export default function Home() {
     const forviaPreload = preloadVideo('/images/forvia/FORVIA.VIDEO.mp4')
     const silmoPreload = preloadVideo(SILMO_VIDEO_SRC)
     const auxiPreload = preloadVideo(AUXI_VIDEO_SRC)
+    const renaultPreload = preloadVideo(RENAULT_VIDEO_SRC)
 
     return () => {
-      for (const v of [forviaPreload, silmoPreload, auxiPreload]) {
+      for (const v of [forviaPreload, silmoPreload, auxiPreload, renaultPreload]) {
         if (v.parentNode) v.parentNode.removeChild(v)
       }
     }
   }, [])
 
-  // Forvia + SILMO + PRP (AUXI) panel videos: loop while section open
+  // Panel project videos: loop while section open
   useEffect(() => {
     const isForviaOpen = openValue === 'Collaborate'
     const isSilmoOpen = openValue === 'Meet'
     const isListenOpen = openValue === 'Listen'
+    const isEmpowerOpen = openValue === 'Empower'
 
     const attachPanelVideo = (
       ref: React.RefObject<HTMLVideoElement | null>,
@@ -334,14 +330,17 @@ export default function Home() {
     const cleanForvia = attachPanelVideo(videoRef, isForviaOpen)
     const cleanSilmo = attachPanelVideo(silmoVideoRef, isSilmoOpen)
     const cleanPrp = attachPanelVideo(prpVideoRef, isListenOpen)
+    const cleanRenault = attachPanelVideo(renaultVideoRef, isEmpowerOpen)
 
     return () => {
       cleanForvia()
       cleanSilmo()
       cleanPrp()
+      cleanRenault()
       videoRef.current?.pause()
       silmoVideoRef.current?.pause()
       prpVideoRef.current?.pause()
+      renaultVideoRef.current?.pause()
     }
   }, [openValue])
 
@@ -793,7 +792,145 @@ export default function Home() {
                           </p>
                         )}
 
-                        {projectId === 4 && project.images && project.images.length === 8 ? (
+                        {projectId === 0 && project.images && project.images.length === 6 ? (
+                          <>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 0)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[0]}
+                                  alt={`${subtitle} ${description} - Image 1`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized
+                                  priority
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 1)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[1]}
+                                  alt={`${subtitle} ${description} - Image 2`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-contain"
+                                  quality={100}
+                                  unoptimized
+                                  priority
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}
+                              >
+                                <video
+                                  ref={renaultVideoRef}
+                                  src={RENAULT_VIDEO_SRC}
+                                  loop
+                                  muted
+                                  playsInline
+                                  autoPlay
+                                  preload="auto"
+                                  className="absolute inset-0 h-full w-full object-contain"
+                                  onCanPlay={() => {
+                                    if (
+                                      renaultVideoRef.current &&
+                                      openValue === 'Empower' &&
+                                      renaultVideoRef.current.paused
+                                    ) {
+                                      renaultVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onPause={() => {
+                                    if (renaultVideoRef.current && openValue === 'Empower') {
+                                      renaultVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onEnded={() => {
+                                    if (renaultVideoRef.current && openValue === 'Empower') {
+                                      renaultVideoRef.current.currentTime = 0
+                                      renaultVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onTimeUpdate={() => {
+                                    if (
+                                      renaultVideoRef.current &&
+                                      openValue === 'Empower' &&
+                                      renaultVideoRef.current.paused
+                                    ) {
+                                      renaultVideoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                >
+                                  <source src={RENAULT_VIDEO_SRC} type="video/quicktime" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            </div>
+                            {project.images.slice(2).map((imgSrc, sliceIdx) => {
+                              const idx = sliceIdx + 2
+                              return (
+                                <div
+                                  key={idx}
+                                  className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleImageClick(project.images || [], idx)
+                                  }}
+                                >
+                                  <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                    <Image
+                                      src={imgSrc}
+                                      alt={`${subtitle} ${description} - Image ${sliceIdx + 4}`}
+                                      fill
+                                      sizes="100vw"
+                                      className="object-contain"
+                                      quality={100}
+                                      unoptimized
+                                      priority={false}
+                                      loading="eager"
+                                    />
+                                    <div className="pointer-events-none absolute bottom-2 left-2">
+                                      <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                        <i className="bi bi-zoom-in text-xs"></i>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </>
+                        ) : projectId === 4 && project.images && project.images.length === 8 ? (
                           <>
                             {project.images.slice(0, 7).map((imgSrc, idx) => (
                               <div
@@ -829,8 +966,7 @@ export default function Home() {
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div
-                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`}
-                                style={{ minHeight: '400px', backgroundColor: 'transparent' }}
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}
                               >
                                 <video
                                   ref={prpVideoRef}
@@ -840,20 +976,7 @@ export default function Home() {
                                   playsInline
                                   autoPlay
                                   preload="auto"
-                                  width="1920"
-                                  height="1080"
-                                  className="h-full w-full object-contain"
-                                  style={{
-                                    display: 'block',
-                                    width: '100%',
-                                    height: '100%',
-                                    minHeight: '400px',
-                                    backgroundColor: 'transparent',
-                                    opacity: 1,
-                                    visibility: 'visible',
-                                    zIndex: 1,
-                                    position: 'relative',
-                                  }}
+                                  className="absolute inset-0 h-full w-full object-contain"
                                   onCanPlay={() => {
                                     if (
                                       prpVideoRef.current &&
@@ -975,8 +1098,7 @@ export default function Home() {
                               onClick={(e) => e.stopPropagation()}
                             >
                               <div
-                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`}
-                                style={{ minHeight: '400px', backgroundColor: 'transparent' }}
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}
                               >
                                 <video
                                   ref={silmoVideoRef}
@@ -986,20 +1108,7 @@ export default function Home() {
                                   playsInline
                                   autoPlay
                                   preload="auto"
-                                  width="1920"
-                                  height="1080"
-                                  className="h-full w-full object-contain"
-                                  style={{
-                                    display: 'block',
-                                    width: '100%',
-                                    height: '100%',
-                                    minHeight: '400px',
-                                    backgroundColor: 'transparent',
-                                    opacity: 1,
-                                    visibility: 'visible',
-                                    zIndex: 1,
-                                    position: 'relative',
-                                  }}
+                                  className="absolute inset-0 h-full w-full object-contain"
                                   onCanPlay={() => {
                                     if (
                                       silmoVideoRef.current &&
@@ -1105,7 +1214,7 @@ export default function Home() {
                             className="relative w-full max-w-3xl mx-auto"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER}`} style={{ minHeight: '400px', backgroundColor: 'transparent' }}>
+                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
                               <video
                                 ref={videoRef}
                                 src="/images/forvia/FORVIA.VIDEO.mp4"
@@ -1114,20 +1223,7 @@ export default function Home() {
                                 playsInline
                                 autoPlay
                                 preload="auto"
-                                width="1920"
-                                height="1080"
-                                className="w-full h-full object-contain"
-                                style={{
-                                  display: 'block',
-                                  width: '100%',
-                                  height: '100%',
-                                  minHeight: '400px',
-                                  backgroundColor: 'transparent',
-                                  opacity: 1,
-                                  visibility: 'visible',
-                                  zIndex: 1,
-                                  position: 'relative'
-                                }}
+                                className="absolute inset-0 h-full w-full object-contain"
                                 onCanPlay={() => {
                                   if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
                                     videoRef.current.play().catch(() => {})
