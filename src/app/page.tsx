@@ -48,11 +48,7 @@ const PROJECTS = [
       "/images/dacia/DACIA.002.jpeg",
       "/images/dacia/DACIA.003.jpeg",
       "/images/dacia/DACIA.004.jpeg",
-      "/images/dacia/DACIA.005.jpeg",
-      "/images/dacia/DACIA.006.jpeg",
-      "/images/dacia/DACIA.007.jpeg",
-      "/images/dacia/DACIA.008.jpeg",
-      "/images/dacia/DACIA.009.jpeg"
+      "/images/dacia/DACIA.005.jpeg"
     ]
   },
   {
