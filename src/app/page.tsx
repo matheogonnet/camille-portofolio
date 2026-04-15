@@ -48,7 +48,8 @@ const PROJECTS = [
       "/images/dacia/DACIA.002.jpeg",
       "/images/dacia/DACIA.003.jpeg",
       "/images/dacia/DACIA.004.jpeg",
-      "/images/dacia/DACIA.005.jpeg"
+      "/images/dacia/DACIA.005.jpeg",
+      "/images/dacia/DACIA.006.jpeg"
     ]
   },
   {
@@ -59,7 +60,7 @@ const PROJECTS = [
       '/images/renault/RENAULT.004.jpeg',
       '/images/renault/RENAULT.005.jpeg',
       '/images/renault/RENAULT.006.jpeg',
-      '/images/renault/RENAULT.007.jpeg',
+      '/images/renault/RENAULT.007.jpeg'
     ],
   },
 ]
@@ -68,6 +69,7 @@ const PROJECTS = [
 const SILMO_VIDEO_SRC = '/images/silmo/SILMO.003.MOV'
 const AUXI_VIDEO_SRC = '/images/prp/AUXI.008.mov'
 const RENAULT_VIDEO_SRC = '/images/renault/RENAULT.003.mov'
+const RENAULT_VIDEO_SRC_2 = '/images/renault/RENAULT.008.mp4'
 
 const VALUE_PROJECTS = [
   { value: 'Listen', coverImage: '/images/cover-picts/forme_01.png', projectId: 4, subtitle: 'Master Thesis', description: 'Domestic Violence' },
@@ -122,6 +124,7 @@ export default function Home() {
   const silmoVideoRef = useRef<HTMLVideoElement>(null)
   const prpVideoRef = useRef<HTMLVideoElement>(null)
   const renaultVideoRef = useRef<HTMLVideoElement>(null)
+  const renaultVideoRef2 = useRef<HTMLVideoElement>(null)
   const heroSectionRef = useRef<HTMLElement>(null)
   const heroOrbRefs = useRef<(HTMLDivElement | null)[]>([])
   const heroOrbAnimeRef = useRef<ReturnType<typeof anime>[]>([])
@@ -274,9 +277,10 @@ export default function Home() {
     const silmoPreload = preloadVideo(SILMO_VIDEO_SRC)
     const auxiPreload = preloadVideo(AUXI_VIDEO_SRC)
     const renaultPreload = preloadVideo(RENAULT_VIDEO_SRC)
+    const renaultPreload2 = preloadVideo(RENAULT_VIDEO_SRC_2)
 
     return () => {
-      for (const v of [forviaPreload, silmoPreload, auxiPreload, renaultPreload]) {
+      for (const v of [forviaPreload, silmoPreload, auxiPreload, renaultPreload, renaultPreload2]) {
         if (v.parentNode) v.parentNode.removeChild(v)
       }
     }
@@ -331,16 +335,24 @@ export default function Home() {
     const cleanSilmo = attachPanelVideo(silmoVideoRef, isSilmoOpen)
     const cleanPrp = attachPanelVideo(prpVideoRef, isListenOpen)
     const cleanRenault = attachPanelVideo(renaultVideoRef, isEmpowerOpen)
+    const cleanRenault2 = attachPanelVideo(renaultVideoRef2, isEmpowerOpen)
+    const FORVIA_VIDEO = videoRef.current
+    const SILMO_VIDEO = silmoVideoRef.current
+    const PRP_VIDEO = prpVideoRef.current
+    const RENAULT_VIDEO = renaultVideoRef.current
+    const RENAULT_VIDEO_2 = renaultVideoRef2.current
 
     return () => {
       cleanForvia()
       cleanSilmo()
       cleanPrp()
       cleanRenault()
-      videoRef.current?.pause()
-      silmoVideoRef.current?.pause()
-      prpVideoRef.current?.pause()
-      renaultVideoRef.current?.pause()
+      cleanRenault2()
+      FORVIA_VIDEO?.pause()
+      SILMO_VIDEO?.pause()
+      PRP_VIDEO?.pause()
+      RENAULT_VIDEO?.pause()
+      RENAULT_VIDEO_2?.pause()
     }
   }, [openValue])
 
@@ -792,7 +804,7 @@ export default function Home() {
                           </p>
                         )}
 
-                        {projectId === 0 && project.images && project.images.length === 6 ? (
+                        {projectId === 0 && project.images && project.images.length >= 6 ? (
                           <>
                             <div
                               className="relative w-full max-w-3xl mx-auto cursor-pointer"
@@ -897,7 +909,7 @@ export default function Home() {
                                 </video>
                               </div>
                             </div>
-                            {project.images.slice(2).map((imgSrc, sliceIdx) => {
+                            {project.images.slice(2, 6).map((imgSrc, sliceIdx) => {
                               const idx = sliceIdx + 2
                               return (
                                 <div
@@ -929,6 +941,60 @@ export default function Home() {
                                 </div>
                               )
                             })}
+                            <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto pt-2`}>
+                              And other projects, during internship, that taught me a lot
+                            </p>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div
+                                className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}
+                              >
+                                <video
+                                  ref={renaultVideoRef2}
+                                  src={RENAULT_VIDEO_SRC_2}
+                                  loop
+                                  muted
+                                  playsInline
+                                  autoPlay
+                                  preload="auto"
+                                  className="absolute inset-0 h-full w-full object-contain"
+                                  onCanPlay={() => {
+                                    if (
+                                      renaultVideoRef2.current &&
+                                      openValue === 'Empower' &&
+                                      renaultVideoRef2.current.paused
+                                    ) {
+                                      renaultVideoRef2.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onPause={() => {
+                                    if (renaultVideoRef2.current && openValue === 'Empower') {
+                                      renaultVideoRef2.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onEnded={() => {
+                                    if (renaultVideoRef2.current && openValue === 'Empower') {
+                                      renaultVideoRef2.current.currentTime = 0
+                                      renaultVideoRef2.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onTimeUpdate={() => {
+                                    if (
+                                      renaultVideoRef2.current &&
+                                      openValue === 'Empower' &&
+                                      renaultVideoRef2.current.paused
+                                    ) {
+                                      renaultVideoRef2.current.play().catch(() => {})
+                                    }
+                                  }}
+                                >
+                                  <source src={RENAULT_VIDEO_SRC_2} type="video/mp4" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            </div>
                           </>
                         ) : projectId === 4 && project.images && project.images.length === 8 ? (
                           <>
