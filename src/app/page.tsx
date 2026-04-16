@@ -38,7 +38,8 @@ const PROJECTS = [
       "/images/forvia/FORVIA.002.jpeg",
       "/images/forvia/FORVIA.003.jpeg",
       "/images/forvia/FORVIA.004.jpeg",
-      "/images/forvia/FORVIA.005.jpeg"
+      "/images/forvia/FORVIA.005.jpeg",
+      "/images/forvia/FORVIA.006.jpeg"
     ]  
   },
   {
@@ -78,6 +79,39 @@ const VALUE_PROJECTS = [
   { value: 'Understand', coverImage: '/images/cover-picts/forme_04.png', projectId: 1, subtitle: 'Dacia', description: 'Accessory Design Competition' },
   { value: 'Empower', coverImage: '/images/cover-picts/forme_05.png', projectId: 0, subtitle: 'Renault', description: 'Renault Interlude' },
 ]
+
+const VOLUNTEER_WORK = [
+  {
+    title: 'Mecenat Chirurgie Cardiaque',
+    details:
+      'Ongoing involvement in the Grande Vente de Noel: contribute to the organization and sales of a charity event raising funds to finance heart surgeries for children from disadvantaged countries.',
+  },
+  {
+    title: 'Nightline France',
+    details:
+      'Participated in Paris Run for All 2026: completed a 6 km solidarity run to support student mental health initiatives and raise awareness for the association\'s listening and support services.',
+  },
+  {
+    title: 'Les Restos du Coeur',
+    details:
+      'Volunteer in the communication team: designed visual materials, handled graphic edits, and contributed creative ideas to support the association\'s needs. And led food collection campaigns for 2 years in supermarkets: raised public awareness and collected essential goods to support people in need.',
+  },
+  {
+    title: 'Association Petits Princes',
+    details:
+      'Participated in the Course des Heros at Parc de Saint-Cloud: raised 250 EUR and completed a 5 km charity run to support children of the association in achieving their dreams. A solidarity event combining sport and fundraising.',
+  },
+  {
+    title: 'Paris 2024 Olympic Games',
+    details:
+      'Assisted in managing on-site transport operations, including coordination of a 10-person international team, oversight of daily transport flows, liaison with external providers, and daily reporting to senior management to ensure smooth and efficient mobility operations.',
+  },
+  {
+    title: "Pour un Sourire d'Enfant",
+    details:
+      'First hands-on volunteering experience in middle school: gift wrapping at Decathlon and presenting the association to customers to support its mission.',
+  },
+] as const
 
 // 7 orbs (same colors as project circles, some repeated for coverage)
 // wx / wy are fractions [0..1] of section W/H — closed loop (last = first)
@@ -131,6 +165,7 @@ export default function Home() {
   const projectCirclesRowRef = useRef<HTMLDivElement>(null)
   const projectPanelEndRef = useRef<HTMLDivElement>(null)
   const [projectCloseVisible, setProjectCloseVisible] = useState(false)
+  const [openVolunteerTitle, setOpenVolunteerTitle] = useState<string | null>(null)
 
   const SCROLL_TO_CIRCLES_MS = 780
 
@@ -630,21 +665,41 @@ export default function Home() {
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
                   This human approach is not limited to my professional projects.
                 </p>
-                <div className="space-y-3 text-gray-600">
-                  {[
-                    'Association Petits Princes',
-                    'Paris 2024 Olympic Games',
-                    'Les Restos du Cœur',
-                    'Mécénat Chirurgie Cardiaque',
-                    "Pour un Sourire d'Enfant",
-                  ].map((label) => (
-                    <p
-                      key={label}
-                      className="mx-auto max-w-lg cursor-default rounded-md px-3 py-2 transition-all duration-300 ease-out hover:translate-x-1 hover:text-gray-900"
+                <div className="group/volunteer space-y-3 text-gray-600">
+                  {VOLUNTEER_WORK.map((item) => {
+                    const IS_OPEN = openVolunteerTitle === item.title
+                    return (
+                    <div
+                      key={item.title}
+                      className={`group mx-auto max-w-2xl transition-opacity duration-500 ease-out ${
+                        openVolunteerTitle && !IS_OPEN ? 'opacity-35' : ''
+                      } group-hover/volunteer:opacity-35 hover:!opacity-100 focus-within:!opacity-100`}
                     >
-                      {label}
-                    </p>
-                  ))}
+                      <button
+                        type="button"
+                        onClick={() => setOpenVolunteerTitle((prev) => (prev === item.title ? null : item.title))}
+                        className="w-full cursor-pointer rounded-md px-3 py-2 text-base sm:text-lg text-gray-700 transition-all duration-300 ease-out hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300"
+                        aria-label={item.title}
+                        aria-expanded={IS_OPEN}
+                      >
+                        {item.title}
+                      </button>
+                      <div className={`mx-auto h-[2px] bg-[#DC9B5A] transition-all duration-500 ease-out ${
+                        IS_OPEN ? 'w-24' : 'w-0'
+                      } group-hover:w-24 group-focus-within:w-24`} />
+                      <div className={`grid px-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        IS_OPEN ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                      } group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]`}>
+                        <div className="overflow-hidden">
+                          <div className={`rounded-md bg-transparent px-3 text-center text-sm sm:text-base leading-relaxed text-gray-600 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            IS_OPEN ? 'mt-1 translate-y-0 py-2 opacity-100' : 'translate-y-1 py-0 opacity-0'
+                          } group-hover:mt-1 group-hover:translate-y-0 group-hover:py-2 group-hover:opacity-100 group-focus-within:mt-1 group-focus-within:translate-y-0 group-focus-within:py-2 group-focus-within:opacity-100`}>
+                            {item.details}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )})}
                 </div>
               </div>
             </div>
@@ -723,8 +778,8 @@ export default function Home() {
                             {value}
                           </span>
                           <span
-                            className={`text-[10px] sm:text-xs md:text-sm font-medium leading-tight px-0.5 transition-colors duration-300 ${
-                              isDimmed ? 'text-gray-400/55' : 'text-gray-400'
+                            className={`text-base sm:text-lg leading-relaxed px-0.5 transition-colors duration-300 ${
+                              isDimmed ? 'text-gray-400/55' : 'text-gray-600'
                             }`}
                           >
                             {subtitle}
@@ -804,7 +859,113 @@ export default function Home() {
                           </p>
                         )}
 
-                        {projectId === 0 && project.images && project.images.length >= 6 ? (
+                        {projectId === 2 && project.images && project.images.length >= 6 ? (
+                          <>
+                            {project.images.slice(0, 5).map((imgSrc, idx) => (
+                              <div
+                                key={idx}
+                                className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleImageClick(project.images || [], idx)
+                                }}
+                              >
+                                <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                  <Image
+                                    src={imgSrc}
+                                    alt={`${subtitle} ${description} - Image ${idx + 1}`}
+                                    fill
+                                    sizes="100vw"
+                                    className="object-contain"
+                                    quality={100}
+                                    unoptimized
+                                    priority={idx < 3}
+                                    loading="eager"
+                                  />
+                                  <div className="pointer-events-none absolute bottom-2 left-2">
+                                    <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                      <i className="bi bi-zoom-in text-xs"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                            <div
+                              className="relative w-full max-w-3xl mx-auto"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <video
+                                  ref={videoRef}
+                                  src="/images/forvia/FORVIA.VIDEO.mp4"
+                                  loop
+                                  muted
+                                  playsInline
+                                  autoPlay
+                                  preload="auto"
+                                  className="absolute inset-0 h-full w-full object-contain"
+                                  onCanPlay={() => {
+                                    if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                      videoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onPause={() => {
+                                    if (videoRef.current && openValue === 'Collaborate') {
+                                      videoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onEnded={() => {
+                                    if (videoRef.current && openValue === 'Collaborate') {
+                                      videoRef.current.currentTime = 0
+                                      videoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                  onTimeUpdate={() => {
+                                    if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
+                                      videoRef.current.play().catch(() => {})
+                                    }
+                                  }}
+                                >
+                                  <source src="/images/forvia/FORVIA.VIDEO.mp4" type="video/mp4" />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-center gap-3 pt-2">
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
+                              <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center`}>
+                                Other projects that taught me a lot.
+                              </p>
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
+                            </div>
+                            <div
+                              className="relative w-full max-w-3xl mx-auto cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleImageClick(project.images || [], 5)
+                              }}
+                            >
+                              <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
+                                <Image
+                                  src={project.images[5]}
+                                  alt={`${subtitle} ${description} - Image 6`}
+                                  fill
+                                  sizes="100vw"
+                                  className="object-cover scale-[1.06]"
+                                  quality={100}
+                                  unoptimized
+                                  priority={false}
+                                  loading="eager"
+                                />
+                                <div className="pointer-events-none absolute bottom-2 left-2">
+                                  <div className="bg-black/50 text-white rounded-full h-7 w-7 flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <i className="bi bi-zoom-in text-xs"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : projectId === 0 && project.images && project.images.length >= 6 ? (
                           <>
                             <div
                               className="relative w-full max-w-3xl mx-auto cursor-pointer"
@@ -941,9 +1102,13 @@ export default function Home() {
                                 </div>
                               )
                             })}
-                            <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto pt-2`}>
-                              And other projects, during internship, that taught me a lot
-                            </p>
+                            <div className="flex items-center justify-center gap-3 pt-2">
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
+                              <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center`}>
+                                Other projects that taught me a lot.
+                              </p>
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
+                            </div>
                             <div
                               className="relative w-full max-w-3xl mx-auto"
                               onClick={(e) => e.stopPropagation()}
@@ -1273,50 +1438,6 @@ export default function Home() {
                               </div>
                             </div>
                           ))
-                        )}
-
-                        {projectId === 2 && (
-                          <div
-                            className="relative w-full max-w-3xl mx-auto"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
-                              <video
-                                ref={videoRef}
-                                src="/images/forvia/FORVIA.VIDEO.mp4"
-                                loop
-                                muted
-                                playsInline
-                                autoPlay
-                                preload="auto"
-                                className="absolute inset-0 h-full w-full object-contain"
-                                onCanPlay={() => {
-                                  if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
-                                    videoRef.current.play().catch(() => {})
-                                  }
-                                }}
-                                onPause={() => {
-                                  if (videoRef.current && openValue === 'Collaborate') {
-                                    videoRef.current.play().catch(() => {})
-                                  }
-                                }}
-                                onEnded={() => {
-                                  if (videoRef.current && openValue === 'Collaborate') {
-                                    videoRef.current.currentTime = 0
-                                    videoRef.current.play().catch(() => {})
-                                  }
-                                }}
-                                onTimeUpdate={() => {
-                                  if (videoRef.current && openValue === 'Collaborate' && videoRef.current.paused) {
-                                    videoRef.current.play().catch(() => {})
-                                  }
-                                }}
-                              >
-                                <source src="/images/forvia/FORVIA.VIDEO.mp4" type="video/mp4" />
-                                Your browser does not support the video tag.
-                              </video>
-                            </div>
-                          </div>
                         )}
 
                         <div
