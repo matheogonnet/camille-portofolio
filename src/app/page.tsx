@@ -166,6 +166,9 @@ export default function Home() {
   const projectPanelEndRef = useRef<HTMLDivElement>(null)
   const [projectCloseVisible, setProjectCloseVisible] = useState(false)
   const [openVolunteerTitle, setOpenVolunteerTitle] = useState<string | null>(null)
+  const [hoverVolunteerTitle, setHoverVolunteerTitle] = useState<string | null>(null)
+
+  const activeVolunteerTitle = hoverVolunteerTitle ?? openVolunteerTitle
 
   const SCROLL_TO_CIRCLES_MS = 780
 
@@ -665,41 +668,56 @@ export default function Home() {
                 <p className="text-lg text-gray-600 leading-relaxed mb-8">
                   This human approach is not limited to my professional projects.
                 </p>
-                <div className="group/volunteer space-y-3 text-gray-600">
+                <div className="space-y-3 text-gray-600">
                   {VOLUNTEER_WORK.map((item) => {
                     const IS_OPEN = openVolunteerTitle === item.title
+                    const IS_HOVERED = hoverVolunteerTitle === item.title
+                    const IS_ACTIVE = IS_OPEN || IS_HOVERED
+                    const IS_DIMMED = activeVolunteerTitle !== null && !IS_ACTIVE
+
                     return (
-                    <div
-                      key={item.title}
-                      className={`group mx-auto max-w-2xl transition-opacity duration-500 ease-out ${
-                        openVolunteerTitle && !IS_OPEN ? 'opacity-35' : ''
-                      } group-hover/volunteer:opacity-35 hover:!opacity-100 focus-within:!opacity-100`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setOpenVolunteerTitle((prev) => (prev === item.title ? null : item.title))}
-                        className="w-full cursor-pointer rounded-md px-3 py-2 text-base sm:text-lg text-gray-700 transition-all duration-300 ease-out hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300"
-                        aria-label={item.title}
-                        aria-expanded={IS_OPEN}
+                      <div
+                        key={item.title}
+                        className={`mx-auto max-w-2xl transition-opacity duration-500 ease-out ${
+                          IS_DIMMED ? 'opacity-35' : 'opacity-100'
+                        }`}
                       >
-                        {item.title}
-                      </button>
-                      <div className={`mx-auto h-[2px] bg-[#DC9B5A] transition-all duration-500 ease-out ${
-                        IS_OPEN ? 'w-24' : 'w-0'
-                      } group-hover:w-24 group-focus-within:w-24`} />
-                      <div className={`grid px-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                        IS_OPEN ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-                      } group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]`}>
-                        <div className="overflow-hidden">
-                          <div className={`rounded-md bg-transparent px-3 text-center text-sm sm:text-base leading-relaxed text-gray-600 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            IS_OPEN ? 'mt-1 translate-y-0 py-2 opacity-100' : 'translate-y-1 py-0 opacity-0'
-                          } group-hover:mt-1 group-hover:translate-y-0 group-hover:py-2 group-hover:opacity-100 group-focus-within:mt-1 group-focus-within:translate-y-0 group-focus-within:py-2 group-focus-within:opacity-100`}>
-                            {item.details}
+                        <button
+                          type="button"
+                          onClick={() => setOpenVolunteerTitle((prev) => (prev === item.title ? null : item.title))}
+                          onMouseEnter={() => setHoverVolunteerTitle(item.title)}
+                          onMouseLeave={() => setHoverVolunteerTitle(null)}
+                          onFocus={() => setHoverVolunteerTitle(item.title)}
+                          onBlur={() => setHoverVolunteerTitle(null)}
+                          className="w-full cursor-pointer rounded-md px-3 py-2 text-base sm:text-lg text-gray-700 transition-all duration-300 ease-out hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-300"
+                          aria-label={item.title}
+                          aria-expanded={IS_ACTIVE}
+                        >
+                          {item.title}
+                        </button>
+                        <div
+                          className={`mx-auto h-[2px] bg-[#DC9B5A] transition-all duration-500 ease-out ${
+                            IS_ACTIVE ? 'w-24' : 'w-0'
+                          }`}
+                        />
+                        <div
+                          className={`grid px-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            IS_ACTIVE ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                          }`}
+                        >
+                          <div className="overflow-hidden">
+                            <div
+                              className={`rounded-md bg-transparent px-3 text-center text-sm sm:text-base leading-relaxed text-gray-600 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                IS_ACTIVE ? 'mt-1 translate-y-0 py-2 opacity-100' : 'translate-y-1 py-0 opacity-0'
+                              }`}
+                            >
+                              {item.details}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )})}
+                    )
+                  })}
                 </div>
               </div>
             </div>
@@ -933,7 +951,7 @@ export default function Home() {
                             </div>
                             <div className="flex items-center justify-center gap-3 pt-2">
                               <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
-                              <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center`}>
+                              <p className={`${PANEL_BODY} whitespace-nowrap text-xs sm:text-base md:text-lg leading-relaxed text-center`}>
                                 Other projects that taught me a lot.
                               </p>
                               <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
@@ -1104,7 +1122,7 @@ export default function Home() {
                             })}
                             <div className="flex items-center justify-center gap-3 pt-2">
                               <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
-                              <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center`}>
+                              <p className={`${PANEL_BODY} whitespace-nowrap text-xs sm:text-base md:text-lg leading-relaxed text-center`}>
                                 Other projects that taught me a lot.
                               </p>
                               <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
