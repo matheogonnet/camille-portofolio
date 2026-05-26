@@ -15,9 +15,11 @@ const PROJECTS = [
     images: [
       '/images/prp/AUXI.001.jpeg',
       '/images/prp/AUXI.002.jpeg',
+      '/images/prp/AUXI.002.2.jpeg',
       '/images/prp/AUXI.003.jpeg',
       '/images/prp/AUXI.004.jpeg',
       '/images/prp/AUXI.005.jpeg',
+      '/images/prp/AUXI.005.2.jpeg',
       '/images/prp/AUXI.006.jpeg',
       '/images/prp/AUXI.007.jpeg',
       '/images/prp/AUXI.009.jpeg',
@@ -57,6 +59,7 @@ const PROJECTS = [
     id: 0,
     images: [
       '/images/renault/RENAULT.001.jpeg',
+      '/images/renault/RENAULT.001.2.jpeg',
       '/images/renault/RENAULT.002.jpeg',
       '/images/renault/RENAULT.004.jpeg',
       '/images/renault/RENAULT.005.jpeg',
@@ -631,9 +634,11 @@ export default function Home() {
                     <h1 className="name-text block text-6xl font-serif tracking-wide text-gray-900 opacity-0">
                       Camille Grand
                     </h1>
-                    <p className="subtitle-text text-xl tracking-widest text-gray-600 opacity-0 uppercase">
-                      Industrial Designer
-                    </p>
+                    <div className="subtitle-text flex items-center justify-center gap-3 text-gray-600 opacity-0">
+                      <span className="h-px w-8 bg-gray-400/80" aria-hidden />
+                      <p className="text-2xl tracking-widest uppercase">Designer</p>
+                      <span className="h-px w-8 bg-gray-400/80" aria-hidden />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -732,7 +737,7 @@ export default function Home() {
               
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center mb-12 sm:mb-16 max-w-3xl mx-auto px-4">
                 All my work is driven by human connection and guided by five core values.<br className="hidden sm:block" />
-                <span className="sm:hidden"> </span>Each shows a step in my path as a designer and how I create objects for people.
+                <span className="sm:hidden"> </span>Each shows a step in my path as a designer and how I create products for people.
               </p>
               
               <div className="space-y-8">
@@ -1088,7 +1093,7 @@ export default function Home() {
                                 </video>
                               </div>
                             </div>
-                            {project.images.slice(2, 6).map((imgSrc, sliceIdx) => {
+                            {project.images.slice(2).map((imgSrc, sliceIdx) => {
                               const idx = sliceIdx + 2
                               return (
                                 <div
@@ -1102,7 +1107,7 @@ export default function Home() {
                                   <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
                                     <Image
                                       src={imgSrc}
-                                      alt={`${subtitle} ${description} - Image ${sliceIdx + 4}`}
+                                      alt={`${subtitle} ${description} - Image ${idx + 1}`}
                                       fill
                                       sizes="100vw"
                                       className="object-contain"
@@ -1179,9 +1184,9 @@ export default function Home() {
                               </div>
                             </div>
                           </>
-                        ) : projectId === 4 && project.images && project.images.length === 8 ? (
+                        ) : projectId === 4 && project.images && project.images.length >= 8 ? (
                           <>
-                            {project.images.slice(0, 7).map((imgSrc, idx) => (
+                            {project.images.slice(0, project.images.length - 1).map((imgSrc, idx) => (
                               <div
                                 key={idx}
                                 className="relative w-full max-w-3xl mx-auto cursor-pointer"
@@ -1265,13 +1270,13 @@ export default function Home() {
                               className="relative w-full max-w-3xl mx-auto cursor-pointer"
                               onClick={(e) => {
                                 e.stopPropagation()
-                                handleImageClick(project.images || [], 7)
+                                handleImageClick(project.images || [], project.images.length - 1)
                               }}
                             >
                               <div className={`relative w-full aspect-video overflow-hidden rounded-lg border ${PANEL_IMG_BORDER} ${PANEL_IMG_BG}`}>
                                 <Image
-                                  src={project.images[7]}
-                                  alt={`${subtitle} ${description} - Image 9`}
+                                  src={project.images[project.images.length - 1]}
+                                  alt={`${subtitle} ${description} - Image ${project.images.length}`}
                                   fill
                                   sizes="100vw"
                                   className="object-contain"
@@ -1286,6 +1291,13 @@ export default function Home() {
                                   </div>
                                 </div>
                               </div>
+                            </div>
+                            <div className="flex items-center justify-center gap-3 pt-2">
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
+                              <p className={`${PANEL_BODY} text-xs sm:text-base md:text-lg leading-relaxed text-center`}>
+                                This project has been shortlisted for the France Design Impact Award 2026 (ongoing).
+                              </p>
+                              <div className={`h-px w-8 sm:w-10 ${PANEL_RULE}`} />
                             </div>
                           </>
                         ) : projectId === 3 && project.images ? (
