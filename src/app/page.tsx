@@ -14,6 +14,8 @@ const PROJECTS = [
     id: 4,
     images: [
       '/images/prp/AUXI.001.jpeg',
+      '/images/prp/AUXI.001.2.jpeg',
+      '/images/prp/AUXI.001.3.jpeg',
       '/images/prp/AUXI.002.jpeg',
       '/images/prp/AUXI.002.2.jpeg',
       '/images/prp/AUXI.003.jpeg',
