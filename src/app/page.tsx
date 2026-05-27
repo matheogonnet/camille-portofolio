@@ -74,6 +74,7 @@ const PROJECTS = [
 // Mapping des valeurs aux projets (visuels cover : public/images/cover-picts/forme_01 … 05)
 const SILMO_VIDEO_SRC = '/images/silmo/SILMO.003.MOV'
 const AUXI_VIDEO_SRC = '/images/prp/AUXI.008.mov'
+const AUXI_DEMO_URL = 'https://auxi-safety-hub.vercel.app/'
 const RENAULT_VIDEO_SRC = '/images/renault/RENAULT.003.mov'
 const RENAULT_VIDEO_SRC_2 = '/images/renault/RENAULT.008.mp4'
 
@@ -1268,6 +1269,20 @@ export default function Home() {
                                 </video>
                               </div>
                             </div>
+                            <p className={`${PANEL_BODY} text-base sm:text-lg leading-relaxed text-center max-w-3xl mx-auto pt-1`}>
+                              <a
+                                href={AUXI_DEMO_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group inline-flex items-center gap-1.5 text-gray-700 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <span className="border-b border-gray-400/70 group-hover:border-[#DC9B5A] transition-colors duration-200">
+                                  Click here to explore the AUXI demo interface
+                                </span>
+                                <i className="bi bi-box-arrow-up-right text-sm opacity-60 group-hover:opacity-100 transition-opacity duration-200" aria-hidden />
+                              </a>
+                            </p>
                             <div
                               className="relative w-full max-w-3xl mx-auto cursor-pointer"
                               onClick={(e) => {
